@@ -5,10 +5,9 @@
 
 JC = javac
 SRCDIR := src
-BUILDDIR := build
+BUILDDIR := obj
 LIBDIR := lib
 TESTDIR := test
-OUTDIR := bin
 TARGET := ManuScripts
 
 SOURCES := $(wildcard $(SRCDIR)/*.java)
@@ -21,7 +20,7 @@ build: $(CLASSES)
 
 run:
 	@cd $(BUILDDIR)
-	java -cp . $(TARGET).class
+	java -cp . $(TARGET)
 
 %.class: %.java
 	$(JC) $(JFLAGS) -d $(BUILDDIR) $<
