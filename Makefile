@@ -12,18 +12,21 @@ TARGET := ManuScripts
 
 SOURCES := $(wildcard $(SRCDIR)/*.java)
 CLASSES := $(SOURCES:.java=.class)
-JFLAGS = -g
+JFLAGS = -g -d $(BUILDDIR) -cp src
 
 buildAndRun: build run
 
 build: $(CLASSES)
 
 run:
-	@cd $(BUILDDIR)
-	java -cp . $(TARGET)
+	@java -cp ./obj $(TARGET)
 
 %.class: %.java
-	$(JC) $(JFLAGS) -d $(BUILDDIR) $<
+	@echo "Building..."
+	@mkdir -p $(BUILDDIR)
+	$(JC) $(JFLAGS) $<
+	@echo "Completed"
+	@echo "------------------------------------------------------ "
 
 clean:
 	rm -f *.class
