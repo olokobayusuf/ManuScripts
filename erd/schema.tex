@@ -17,7 +17,7 @@
 \section*{Tables}
 
 \medskip
-user(id (PK), fname, lname, email, affiliation) \\
+user(id (PK), fname, lname, email, affiliation (nullable)) \\
 
 author(user\_id (PK,FK), address) \\
 
@@ -31,15 +31,15 @@ interests(reviewer\_user\_id (PK,FK), RICodes\_code (PK,FK)) \\
 
 manuscript(id (PK), owner, RICodes\_code, title, status, timestamp, pagecount (nullable) ) \\
 
-researchers( manuscript_id (PK,FK), author_id (PK,FK) ) \\
+secondary(manuscript\_id (PK,FK), order (PK), name) \\
 
-review( id (PK), manuscript\_id (FK), reviewer\_id (FK), dateSent ) \\
+review(manuscript\_id (PK,FK), reviewer\_id (PK,FK), dateSent ) \\
 
-feedback( review\_id(PK,FK), appropriateness, clarity, methodology, contribution, recommendation, dateReceived ) \\
+feedback(manuscript\_id (PK,FK), reviewer\_id (PK,FK), appropriateness, clarity, methodology, contribution, recommendation, dateReceived ) \\
 
-acceptance ( manuscript\_id (PK,FK), issue\_id (FK), position, pageNum) \\
+acceptance (manuscript\_id (PK,FK), issue\_id (FK), position, pageNum) \\
 
-issue ( id (PK), period, volume, year, number, date (nullable) ) \\
+issue (id (PK), period, volume, year, number, date (nullable) ) \\
 
 
 
