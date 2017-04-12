@@ -1,8 +1,15 @@
-public class Reviewer extends User {
+/*
+*   ManuScripts
+*   CS 61 - 17S
+*/
+
+import java.util.Scanner;
+
+public class Editor extends User {
 
     //region --Ctor--
 
-    public Reviewer (String firstName, String lastName, int... riCodes) {
+    public Editor (String firstName, String lastName) {
         
     }
     //endregion

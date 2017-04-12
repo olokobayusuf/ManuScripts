@@ -20,12 +20,12 @@ public class ManuScripts {
             // Split
             String tokens[] = scanner.nextLine().split("\\s");
             // Check command type
-            if (tokens[0].equals("register")) user = User.register();
+            if (tokens[0].equals("register")) ;
             if (tokens[0].equals("login")) user = User.login();
             System.out.println("You said: "+tokens[0]);
         }
         // Begin user UI
-        if (user != null) user.evaluate();
+        if (user != null) user.evaluate(scanner);
         // Say bye
         System.out.println("Bye!");
     }
