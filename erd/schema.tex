@@ -1,0 +1,48 @@
+
+\documentclass{article}
+
+\usepackage{fullpage}
+
+\title{Lab 2: Schema}
+\author{Kevin Farmer and Yusuf Olokoba}
+
+\setlength{\parindent}{0cm}
+
+\begin{document}
+
+\maketitle
+
+
+
+\section*{Tables}
+
+\medskip
+user(id (PK), fname, lname, email, affiliation) \\
+
+author(user\_id (PK,FK), address) \\
+
+editor(user\_id (PK,FK)) \\
+
+reviewer(user\_id (PK,FK)) \\
+
+affiliation(id (PK), institution) \\
+
+interests(reviewer\_user\_id (PK,FK), RICodes\_code (PK,FK)) \\
+
+manuscript(id (PK), owner, RICodes\_code, title, status, timestamp, pagecount (nullable) ) \\
+
+researchers( manuscript_id (PK,FK), author_id (PK,FK) ) \\
+
+review( id (PK), manuscript\_id (FK), reviewer\_id (FK), dateSent ) \\
+
+feedback( review\_id(PK,FK), appropriateness, clarity, methodology, contribution, recommendation, dateReceived ) \\
+
+acceptance ( manuscript\_id (PK,FK), issue\_id (FK), position, pageNum) \\
+
+issue ( id (PK), period, volume, year, number, date (nullable) ) \\
+
+
+
+
+
+\end{document}
