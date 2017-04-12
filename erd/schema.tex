@@ -31,7 +31,7 @@ interests(reviewer\_user\_id (PK,FK), RICodes\_code (PK,FK)) \\
 
 manuscript(id (PK), owner, RICodes\_code, title, status, timestamp, pagecount (nullable) ) \\
 
-secondary(manuscript\_id (PK,FK), order (PK), name) \\
+contributors(manuscript\_id (PK,FK), order (PK), name) \\
 
 review(manuscript\_id (PK,FK), reviewer\_id (PK,FK), dateSent ) \\
 
