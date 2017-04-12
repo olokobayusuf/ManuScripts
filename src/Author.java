@@ -1,3 +1,10 @@
+/*
+*   ManuScripts
+*   CS 61 - 17S
+*/
+
+import java.util.Scanner;
+
 public class Author extends User {
 
     //region --Ctor--
