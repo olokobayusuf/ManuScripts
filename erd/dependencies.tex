@@ -1,6 +1,7 @@
 
 \documentclass{article}
 
+\newcommand{\ra}{$\rightarrow$ }
 
 \title{Lab 2: Dependencies}
 \author{Kevin Farmer and Yusuf Olokoba}
@@ -12,14 +13,23 @@
 \maketitle
 
 
-author\_id $\rightarrow$ name, email, address, affiliation \\
-reviewer\_id $\rightarrow$ name, email, affiliation \\
-editor\_id $\rightarrow$ name \\
+author\_id \ra name, email, address, affiliation\_id \\
+reviewer\_id \ra name, email, affiliation\_id \\
+editor\_id \ra name \\
 
-manuscript\_id $\rightarrow$ title, author, subject, status, status\_timestamp \\
+manuscript\_id \ra title, author, subject, status, status\_timestamp, pageCount \\
 
+manuscript\_id, contributors\_order \ra name \\
 
+manuscript\_id \ra issue\_id, position, pageNum \\
 
+issue\_id \ra year, period, publishDate \\
+
+manuscript\_id, reviewer\_id \ra dateSent, appropriateness, clarity, methodology, contribution, recommendation, dateReceived \\
+
+RICodes\_code \ra interest \\
+
+affilitation\_id \ra institution \\
 
 
 
