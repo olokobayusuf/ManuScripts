@@ -13,23 +13,39 @@
 \maketitle
 
 
-author\_id \ra fname, lname, email, address, affiliation\_id \\
-reviewer\_id \ra fname, lname, email, affiliation\_id \\
-editor\_id \ra fname, lname \\
+\textbf{user} \\
+user\_id \ra fname, lname \\
 
-manuscript\_id \ra title, author\_id, subject, status, timestamp, pageCount \\
+\textbf{author} \\
+user\_id \ra email, address, affiliation\_id \\
 
+\textbf{reviewer} \\
+user\_id \ra email, affiliation\_id \\
+
+\textbf{affiliation} \\
+affilitation\_id \ra institution \\
+
+\textbf{manuscript} \\
+manuscript\_id \ra title, author\_id, RICodes\_code, status, timestamp, pageCount \\
+
+\textbf{contributors} \\
 manuscript\_id, contributors\_order \ra fname, lname \\
 
+\textbf{acceptance} \\
 manuscript\_id \ra issue\_id, position, pageNum \\
 
+\textbf{issue} \\
 issue\_id \ra year, period, publishDate \\
 
-manuscript\_id, reviewer\_id \ra dateSent, appropriateness, clarity, methodology, contribution, recommendation, dateReceived \\
+\textbf{review} \\
+manuscript\_id, reviewer\_id \ra dateSent \\
 
+\textbf{feedback} \\
+manuscript\_id, reviewer\_id \ra appropriateness, clarity, methodology, contribution, recommendation, dateReceived \\
+
+\textbf{RICodes} \\
 RICodes\_code \ra interest \\
 
-affilitation\_id \ra institution \\
 
 
 
