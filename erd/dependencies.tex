@@ -26,22 +26,25 @@ user\_id \ra email, affiliation\_id \\
 affilitation\_id \ra institution \\
 
 \textbf{manuscript} \\
-manuscript\_id \ra title, author\_id, RICodes\_code, status, timestamp, pageCount \\
+manuscript\_id \ra title, author\_id, RICodes\_code, status, timestamp, page\_count \\
 
 \textbf{contributors} \\
 manuscript\_id, contributors\_order \ra fname, lname \\
 
 \textbf{acceptance} \\
-manuscript\_id \ra issue\_id, position, pageNum \\
+manuscript\_id \ra issue\_id, position, page\_num \\
 
 \textbf{issue} \\
-issue\_id \ra year, period, publishDate \\
+issue\_id \ra year, period \\
+
+\textbf{issue\_dates} \\
+year, period \ra publish\_date \\
 
 \textbf{review} \\
-manuscript\_id, reviewer\_id \ra dateSent \\
+manuscript\_id, reviewer\_id \ra date\_sent \\
 
 \textbf{feedback} \\
-manuscript\_id, reviewer\_id \ra appropriateness, clarity, methodology, contribution, recommendation, dateReceived \\
+manuscript\_id, reviewer\_id \ra appropriateness, clarity, methodology, contribution, recommendation, date\_received \\
 
 \textbf{RICodes} \\
 RICodes\_code \ra interest \\
