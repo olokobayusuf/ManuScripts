@@ -1,0 +1,10 @@
+
+submitted
+under review
+rejected
+accepted
+typeset
+scheduled
+published
+
+'submitted','underreview','rejected','accepted','typeset','scheduled','published'
