@@ -255,7 +255,10 @@ INSERT INTO `manuscript` (`author_id`,`editor_id`,`RICodes_code`,`title`,`status
 (8,2,13,"non massa non","accepted","2017-04-11 09:58:30",null),
 (7,1,30,"diam at","scheduled","2016-07-20 19:23:23",16),
 (6,2,33,"varius ultrices, mauris","published","2016-09-25 15:56:29",2),
-(8,2,13,"lorem eu metus In","underreview","2017-01-03 14:29:20",null);
+(8,2,13,"lorem eu metus In","underreview","2017-01-03 14:29:20",null),
+(12,2,13,"lorem ultra","published","2016-09-25 15:56:29",4),
+(3,2,39,"mauris mollis","published","2016-09-25 15:56:29",5),
+(5,2,33,"Phasellus ipsis","published","2016-09-25 15:56:29",9);
 
 
 INSERT INTO `review` (`manuscript_id`,`reviewer_id`,`dateSent`) VALUES 
@@ -285,8 +288,16 @@ INSERT INTO `review` (`manuscript_id`,`reviewer_id`,`dateSent`) VALUES
 (12,19,"2016-09-26 23:17:44"),
 (13,14,"2016-06-02 02:19:18"),
 (13,27,"2017-01-14 13:37:22"),
-(13,15,"2016-11-19 16:46:10");
-
+(13,15,"2016-11-19 16:46:10"),
+(14,14,"2016-11-19 16:46:10"),
+(14,27,"2016-11-19 16:46:10"),
+(14,15,"2016-11-19 16:46:10"),
+(15,25,"2016-11-19 16:46:10"),
+(15,29,"2016-11-19 16:46:10"),
+(15,18,"2016-11-19 16:46:10"),
+(16,17,"2016-11-19 16:46:10"),
+(16,18,"2016-11-19 16:46:10"),
+(16,19,"2016-11-19 16:46:10");
 
 
 INSERT INTO `feedback` (`manuscript_id`,`reviewer_id`,`appropriateness`,`clarity`,`methodology`,`contribution`,`recommendation`,`dateReceived`) VALUES 
@@ -348,7 +359,10 @@ INSERT INTO `issue` (`year`,`period`) VALUES
 INSERT INTO `acceptance` (`manuscript_id`,`issue_id`,`position`,`pageNum`) VALUE
 (8,6,1,1),
 (11,7,2,7),
-(12,3,13,43);
+(12,3,13,43),
+(14,3,27,89),
+(15,4,3,17),
+(16,4,7,23);
 
 INSERT INTO `publish` (`issue_id`,`publishDate`) VALUES 
 (1,"2016-2-23 17:15:07"),
