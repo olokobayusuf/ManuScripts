@@ -20,7 +20,8 @@ CREATE VIEW AnyAuthorManuscripts AS
         WHERE contributors.manuscript_id = manuscript.id
     )
     UNION
-    SELECT fname, lname, title, status, timestamp FROM LeadAuthorManuscripts;
+    SELECT fname, lname, title, status, timestamp FROM LeadAuthorManuscripts
+    ORDER BY lname, timestamp;
 
 DROP VIEW IF EXISTS PublishedIssues;
 CREATE VIEW PublishedIssues AS
