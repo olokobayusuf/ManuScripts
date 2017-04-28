@@ -56,8 +56,8 @@ CREATE VIEW WhatsLeft AS
 		END AS remaining
     FROM manuscript;
 
-DROP VIEW IF EXISTS ReviewStatus;
-CREATE VIEW ReviewStatus AS 
+DROP VIEW IF EXISTS ReviewStatuses;
+CREATE VIEW ReviewStatuses AS 
     SELECT reviewer.user_id, manuscript.id AS manuscript_id, manuscript.title, review.dateSent, feedback.appropriateness, feedback.clarity, feedback.methodology, feedback.contribution, feedback.recommendation
     FROM manuscript, reviewer, review
 	LEFT JOIN feedback ON review.manuscript_id = feedback.manuscript_id AND review.reviewer_id = feedback.reviewer_id
@@ -65,3 +65,11 @@ CREATE VIEW ReviewStatus AS
         manuscript.id = review.manuscript_id AND
         review.reviewer_id = reviewer.user_id
     ORDER BY reviewer.user_id, review.dateSent;
+
+DROP PROCEDURE IF EXISTS ReviewStatus;
+DELIMITER $$
+CREATE PROCEDURE ReviewStatus (reviewer INT)
+    BEGIN
+        SELECT * FROM ReviewStatuses WHERE user_id = reviewer;
+    END $$
+DELIMITER ;
