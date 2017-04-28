@@ -57,7 +57,7 @@ CREATE VIEW WhatsLeft AS
     FROM manuscript;
 
 DROP VIEW IF EXISTS ReviewStatus;
-create view ReviewStatus AS 
+CREATE VIEW ReviewStatus AS 
     SELECT reviewer.user_id, manuscript.id AS manuscript_id, manuscript.title, review.dateSent, feedback.appropriateness, feedback.clarity, feedback.methodology, feedback.contribution, feedback.recommendation
     FROM manuscript, feedback, reviewer, review
     WHERE
