@@ -35,7 +35,7 @@ CREATE VIEW PublishedIssues AS
 
 DROP VIEW IF EXISTS ReviewQueue;
 CREATE VIEW ReviewQueue AS
-    SELECT manuscript.id, author.fname, author.lname, reviewer.fname AS rfname, reviewer.lname AS rlname, timestamp
+    SELECT manuscript.id AS manuscript_id, author.fname AS author_first_name, author.lname AS author_last_name, reviewer.fname AS reviewer_first_name, reviewer.lname AS reviewer_last_name, timestamp
     FROM manuscript, user author, user reviewer, review
     WHERE 
         manuscript.status = 'underreview' AND 
@@ -54,7 +54,7 @@ CREATE VIEW WhatsLeft AS
             WHEN status = 'typeset' THEN 'scheduled'
             WHEN status = 'scheduled' THEN 'published'
 			ELSE '(Nothing)'
-		END AS remaining
+		END AS next_step
     FROM manuscript;
 
 DROP VIEW IF EXISTS ReviewStatuses;
