@@ -242,23 +242,23 @@ INSERT INTO `interests` (`reviewer_id`,`RICodes_code`) VALUES
 (29,47),(29,32),
 (30,88);
 
-INSERT INTO `manuscript` (`author_id`,`editor_id`,`RICodes_code`,`title`,`status`,`timestamp`,`pageCount`) VALUES 
-(12,1,16,"ridiculus","submitted","2017-01-14 23:12:52",null),
-(12,2,39,"Donec tempus, lorem fringilla","typeset","2016-10-06 20:09:21",12),
-(10,2,11,"turpis Aliquam adipiscing","submitted","2016-11-02 01:00:22",null),
-(3,2,44,"pretium aliquet,","underreview","2017-01-13 10:53:42",null),
-(10,1,39,"vulputate, lacus","rejected","2017-02-22 08:29:27",null),
-(4,2,42,"justo","accepted","2016-12-18 16:12:05",null),
-(9,2,32,"mollis Phasellus","typeset","2016-11-10 04:11:10",5),
-(7,2,40,"eget, ipsum Donec","scheduled","2016-12-11 07:02:18",9),
-(5,1,3,"aliquam","rejected","2017-03-28 06:57:28",null),
-(8,2,13,"non massa non","accepted","2017-04-11 09:58:30",null),
-(7,1,30,"diam at","scheduled","2016-07-20 19:23:23",16),
-(6,2,33,"varius ultrices, mauris","published","2016-09-25 15:56:29",2),
-(8,2,13,"lorem eu metus In","underreview","2017-01-03 14:29:20",null),
-(12,2,13,"lorem ultra","published","2016-09-25 15:56:29",4),
-(3,2,39,"mauris mollis","published","2016-09-25 15:56:29",5),
-(5,2,33,"Phasellus ipsis","published","2016-09-25 15:56:29",9);
+INSERT INTO `manuscript` (`author_id`,`editor_id`,`RICodes_code`,`title`,`status`,`timestamp`,`pageCount`, `doc`) VALUES 
+(12,1,16,"ridiculus","submitted","2017-01-14 23:12:52",null,"temp-blob"),
+(12,2,39,"Donec tempus, lorem fringilla","typeset","2016-10-06 20:09:21",12,"temp-blob"),
+(10,2,11,"turpis Aliquam adipiscing","submitted","2016-11-02 01:00:22",null,"temp-blob"),
+(3,2,44,"pretium aliquet,","underreview","2017-01-13 10:53:42",null,"temp-blob"),
+(10,1,39,"vulputate, lacus","rejected","2017-02-22 08:29:27",null,"temp-blob"),
+(4,2,42,"justo","accepted","2016-12-18 16:12:05",null,"temp-blob"),
+(9,2,32,"mollis Phasellus","typeset","2016-11-10 04:11:10",5,"temp-blob"),
+(7,2,40,"eget, ipsum Donec","scheduled","2016-12-11 07:02:18",9,"temp-blob"),
+(5,1,3,"aliquam","rejected","2017-03-28 06:57:28",null,"temp-blob"),
+(8,2,13,"non massa non","accepted","2017-04-11 09:58:30",null,"temp-blob"),
+(7,1,30,"diam at","scheduled","2016-07-20 19:23:23",16,"temp-blob"),
+(6,2,33,"varius ultrices, mauris","published","2016-09-25 15:56:29",2,"temp-blob"),
+(8,2,13,"lorem eu metus In","underreview","2017-01-03 14:29:20",null,"temp-blob"),
+(12,2,13,"lorem ultra","published","2016-09-25 15:56:29",4,"temp-blob"),
+(3,2,39,"mauris mollis","published","2016-09-25 15:56:29",5,"temp-blob"),
+(5,2,33,"Phasellus ipsis","published","2016-09-25 15:56:29",9,"temp-blob");
 
 
 INSERT INTO `review` (`manuscript_id`,`reviewer_id`,`dateSent`) VALUES 
@@ -372,4 +372,34 @@ INSERT INTO `publish` (`issue_id`,`publishDate`) VALUES
 (5,"2017-03-12 06:30:22");
 
 
+/* Tests to check for constraints, etc in the database */
 
+/* Cannot create a tuple in a role without corresponding user */
+INSERT INTO `editor` (`user_id`) VALUES  (600);
+INSERT INTO `author` (`user_id`) VALUES  (600);
+INSERT INTO `reviewer` (`user_id`) VALUES (600);
+
+/* Cannot insert a non-existing affiliation */
+INSERT INTO `author` (`user_id`,`affiliation_id`) VALUES (17,300);
+INSERT INTO `reviewer` (`user_id`,`affiliation_id`) VALUES (11,300);
+
+/* Cannot create manuscript with an invalid/nonexistant author_id */
+INSERT INTO `manuscript` (`author_id`,`editor_id`,`RICodes_code`,`title`,`status`,`timestamp`,`pageCount`, `doc`) VALUES 
+(27,1,16,"ridiculus","submitted","2017-01-14 23:12:52",null,"temp-blob");
+
+/* Cannot create manuscript with an invalid/nonexistant editor_id */
+INSERT INTO `manuscript` (`author_id`,`editor_id`,`RICodes_code`,`title`,`status`,`timestamp`,`pageCount`, `doc`) VALUES 
+(12,7,16,"ridiculus","submitted","2017-01-14 23:12:52",null,"temp-blob");
+
+/* Cannot create manuscript with an invalid/nonexistant RICode */
+INSERT INTO `manuscript` (`author_id`,`editor_id`,`RICodes_code`,`title`,`status`,`timestamp`,`pageCount`, `doc`) VALUES 
+(12,1,1000,"ridiculus","submitted","2017-01-14 23:12:52",null,"temp-blob");
+
+/* Cannot add a contributor on a non-existant manuscript */
+INSERT INTO `contributors` (`manuscript_id`,`order`,`fname`,`lname`) VALUES (27,1,"Victor","Whitley");
+
+/* Cannot add interest for non-existant reviewer */
+INSERT INTO `interests` (`reviewer_id`,`RICodes_code`) VALUES (47,3);
+
+/* Cannot add interest for non-existant RICode */
+INSERT INTO `interests` (`reviewer_id`,`RICodes_code`) VALUES (17,333);
