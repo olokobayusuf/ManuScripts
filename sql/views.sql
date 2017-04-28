@@ -47,10 +47,10 @@ DROP VIEW IF EXISTS WhatsLeft;
 CREATE VIEW WhatsLeft AS 
 	SELECT id AS manuscript_id, status, 
 		CASE
-			WHEN status = 'submitted' THEN 'underreview -> rejected or accepted -> typeset -> scheduled -> published'
-            WHEN status = 'underreview' THEN 'rejected or accepted -> typeset -> scheduled -> published'
-            WHEN status = 'accepted' THEN 'typeset -> scheduled -> published'
-            WHEN status = 'typeset' THEN 'scheduled -> published'
+			WHEN status = 'submitted' THEN 'underreview'
+            WHEN status = 'underreview' THEN 'rejected or accepted'
+            WHEN status = 'accepted' THEN 'typeset'
+            WHEN status = 'typeset' THEN 'scheduled'
             WHEN status = 'scheduled' THEN 'published'
 			ELSE '(Nothing)'
 		END AS remaining
