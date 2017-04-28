@@ -59,10 +59,9 @@ CREATE VIEW WhatsLeft AS
 DROP VIEW IF EXISTS ReviewStatus;
 CREATE VIEW ReviewStatus AS 
     SELECT reviewer.user_id, manuscript.id AS manuscript_id, manuscript.title, review.dateSent, feedback.appropriateness, feedback.clarity, feedback.methodology, feedback.contribution, feedback.recommendation
-    FROM manuscript, feedback, reviewer, review
+    FROM manuscript, reviewer, review
+	LEFT JOIN feedback ON review.manuscript_id = feedback.manuscript_id AND review.reviewer_id = feedback.reviewer_id
     WHERE
-        review.manuscript_id = manuscript.id AND
-        review.reviewer_id = reviewer.user_id AND
-        feedback.manuscript_id = manuscript.id AND
-        feedback.reviewer_id = reviewer.user_id
+        manuscript.id = review.manuscript_id AND
+        review.reviewer_id = reviewer.user_id
     ORDER BY reviewer.user_id, review.dateSent;
