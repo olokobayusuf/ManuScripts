@@ -46,7 +46,7 @@ BEGIN
         SIGNAL SQLSTATE '45000' SET message_text = message;
         -- Update
         UPDATE manuscript
-        JOIN manuscript_counts ON mansucript.id = manuscript_counts.manuscript_id
+        JOIN manuscript_counts ON manuscript.id = manuscript_counts.manuscript_id
         SET manuscript.status = 'submitted'
         WHERE manuscript_counts.count = 1 AND manuscript_counts.reviewer_id = OLD.user_id;
     END IF;

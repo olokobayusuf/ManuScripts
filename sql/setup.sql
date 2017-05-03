@@ -14,8 +14,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema kfarmer_db
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `kfarmer_db` DEFAULT CHARACTER SET utf8 ;
-USE `kfarmer_db` ;
+CREATE SCHEMA IF NOT EXISTS `yusuf_db` DEFAULT CHARACTER SET utf8 ;
+USE `yusuf_db` ;
 
 -- -----------------------------------------------------
 -- Table `user`
