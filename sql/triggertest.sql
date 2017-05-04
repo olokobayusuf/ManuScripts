@@ -4,8 +4,6 @@
  */
 USE `kfarmer_db`;
 
-SET SQL_SAFE_UPDATES = 0;
-
 -- 100 is an unused RI code
 INSERT INTO `manuscript` (`RICodes_code`) VALUES (100);
 
