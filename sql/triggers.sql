@@ -37,23 +37,23 @@ END$$
 CREATE TRIGGER on_resign_trigger BEFORE DELETE ON reviewer
 FOR EACH ROW
 BEGIN
-    -- DECLARE message VARCHAR(128); 
-    DELETE FROM `interests` where reviewer_id = OLD.user_id;
+    DECLARE message VARCHAR(128); 
+	SET SQL_SAFE_UPDATES = 0;
     IF (
         (SELECT COUNT(*) FROM manuscript_counts WHERE count = 1 AND reviewer_id = OLD.user_id) > 0
     ) THEN
-		SET SQL_SAFE_UPDATES = 0;
 		UPDATE manuscript
 		JOIN manuscript_counts ON manuscript.id = manuscript_counts.manuscript_id
 		SET manuscript.status = 'submitted'
 		WHERE manuscript_counts.count = 1 AND manuscript_counts.reviewer_id = OLD.user_id;
-		SET SQL_SAFE_UPDATES = 1;
-        -- SET message = CONCAT('UserException: Manuscript has no more reviewers :( ', OLD.user_id);
-        -- MySQL doc defines SQLSTATE 45000 as "unhandled user-defined exception."
-        -- SIGNAL SQLSTATE '45000' SET message_text = message;
+        
+        SET message = CONCAT('UserException: Manuscripts have less than 3 reviewers, reset to submitted');
+		INSERT INTO `messages` (`message`) VALUES (message);
     END IF;
+    DELETE FROM `interests` where reviewer_id = OLD.user_id;
 	DELETE FROM `feedback` where reviewer_id = OLD.user_id;
     DELETE FROM `review` where reviewer_id = OLD.user_id;
+	SET SQL_SAFE_UPDATES = 1;
 END$$
 
 DELIMITER ;

@@ -18,6 +18,17 @@ CREATE SCHEMA IF NOT EXISTS `kfarmer_db` DEFAULT CHARACTER SET utf8 ;
 USE `kfarmer_db` ;
 
 -- -----------------------------------------------------
+-- Table `messages`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `messages` ;
+
+CREATE TABLE IF NOT EXISTS `messages` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `message` VARCHAR(128) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+-- -----------------------------------------------------
 -- Table `user`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `user` ;

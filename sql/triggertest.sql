@@ -18,6 +18,7 @@ INSERT INTO `manuscript` (`RICodes_code`) VALUES (11);
 SELECT * FROM `manuscript` WHERE id = 4;
 DELETE FROM `reviewer` WHERE reviewer.user_id = 21;
 SELECT * FROM `manuscript` WHERE id = 4;
+SELECT * FROM `messages`;
 
 -- Delete reviewer 22 who is not the only reviewer for his manuscript
 DELETE FROM `reviewer` WHERE reviewer.user_id = 22;
