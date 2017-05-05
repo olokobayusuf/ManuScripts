@@ -4,18 +4,6 @@
  */
 
 USE `kfarmer_db`;
-    
-/*
-* View for finding number of mansucripts
-* /*
-CREATE OR REPLACE VIEW manuscript_counts AS 
-    SELECT
-    manuscript_id,
-    reviewer_id,
-    COUNT(*) AS count
-    FROM review
-    GROUP BY manuscript_id;
-*/
 
 DROP TRIGGER IF EXISTS ricode_trigger;
 DROP TRIGGER IF EXISTS on_resign_trigger;
@@ -41,8 +29,7 @@ BEGIN
     DECLARE message VARCHAR(128); 
 	SET SQL_SAFE_UPDATES = 0;
     IF (
-		/* (SELECT COUNT(*) FROM manuscript_counts WHERE count = 1 AND reviewer_id = OLD.user_id) > 0 */
-        (select Count(*) from manuscript 
+        (SELECT Count(*) from manuscript 
 			JOIN (SELECT * FROM review WHERE reviewer_id = OLD.user_id) AS reviews ON reviews.manuscript_id = manuscript.id 
             WHERE status = 'underreview') > 0
     ) THEN
@@ -50,13 +37,6 @@ BEGIN
 		JOIN (SELECT * FROM review WHERE reviewer_id = OLD.user_id) AS reviews ON reviews.manuscript_id = manuscript.id
         SET manuscript.status = 'submitted'
         WHERE status = 'underreview';
-        /*
-		UPDATE manuscript
-		JOIN manuscript_counts ON manuscript.id = manuscript_counts.manuscript_id
-		SET manuscript.status = 'submitted'
-		WHERE manuscript_counts.count = 1 AND manuscript_counts.reviewer_id = OLD.user_id;
-		*/
-        
         SET message = CONCAT('UserException: Manuscript(s) has less than 3 reviewers, reset to submitted');
 		INSERT INTO `messages` (`message`) VALUES (message);
     END IF;
