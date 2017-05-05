@@ -17,7 +17,7 @@ CREATE OR REPLACE VIEW manuscript_counts AS
     GROUP BY manuscript_id;
 
 DROP TRIGGER IF EXISTS ricode_trigger;
-DROP TRIGGER IF EXISTS manuscript_trigger;
+DROP TRIGGER IF EXISTS on_resign_trigger;
 
 DELIMITER $$
 
@@ -26,15 +26,15 @@ FOR EACH ROW
 BEGIN
     DECLARE message VARCHAR(128);
     IF (
-        (SELECT COUNT(*) FROM interests WHERE interests.RICodes_code = new.RICodes_code) = 0
+        (SELECT COUNT(*) FROM interests WHERE interests.RICodes_code = new.RICodes_code) < 3
     ) THEN
-        SET message = CONCAT('UserException: No reviewers review this RI Code: ', new.RICodes_code);
+        SET message = CONCAT('UserException: Less than 3 reviewers use this RI Code: ', new.RICodes_code);
         -- MySQL doc defines SQLSTATE 45000 as "unhandled user-defined exception."
         SIGNAL SQLSTATE '45000' SET message_text = message;
     END IF;
 END$$
 
-CREATE TRIGGER on_resign_update BEFORE DELETE ON reviewer
+CREATE TRIGGER on_resign_trigger BEFORE DELETE ON reviewer
 FOR EACH ROW
 BEGIN
     -- DECLARE message VARCHAR(128); 
