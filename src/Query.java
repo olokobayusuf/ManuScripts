@@ -6,20 +6,22 @@
 import java.sql.*;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.stream.IntStream;
 
 public class Query {
 
     //region --Op vars--
 
-    private String attributes[], data[], direct;
     private QueryType type;
+    private String attributes[], data[], direct;
+    private HashMap<String, String> constraints = new HashMap<>();
     private final String table;
 
     private int insertID;
     private ResultSet result;
 
-    private enum QueryType {Insert, Update, Delete, Direct}
+    private enum QueryType {Insert, Update, Select, Delete, Direct}
     private static Connection connection;
     private static final String
     SERVER = "jdbc:mysql://sunapee.cs.dartmouth.edu/",
@@ -41,6 +43,12 @@ public class Query {
         return this;
     }
 
+    public Query select (String... attributes) {
+        this.type = QueryType.Select;
+        this.attributes = attributes;
+        return this;
+    }
+
     public Query direct (String query) {
         this.type = QueryType.Direct;
         this.direct = query;
@@ -57,8 +65,8 @@ public class Query {
         return this;
     }
 
-    public Query where (String attribute, String data) {
-        // ...
+    public Query where (String constraint, String data) {
+        constraints.put(constraint, data);
         return this;
     }
     //endregion
@@ -99,6 +107,27 @@ public class Query {
                 try {
                     final PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
                     for (int i = 0; i < data.length; i++) statement.setString(i + 1, data[i]);
+                    // Execute
+                    result = statement.executeQuery();
+                } catch (SQLException ex) {
+                    Utility.logError("Failed to execute query: "+ex);
+                }
+                break;
+            case Select:
+                // Build the query
+                query = String.format(
+                    "SELECT %s FROM %s %s;",
+                    attributes.length > 0 ? String.join(", ", attributes) : "*",
+                    table,
+                    constraints.size() > 0 ? "WHERE " + String.join(" AND ", constraints.keySet().toArray(new String[0])) : ""
+                );
+                // Log
+                Utility.logVerbose("Preparing query: "+query);
+                // Fill in statement
+                try {
+                    final PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+                    int i = 0;
+                    for (String data : constraints.values()) statement.setString(i = i + 1, data);
                     // Execute
                     result = statement.executeQuery();
                 } catch (SQLException ex) {

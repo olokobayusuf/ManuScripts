@@ -15,15 +15,23 @@ public abstract class User {
 
     public User (String id) {
         this.id = id;
+        // Display welcome
+        welcome();
+        // Display status
+        status();
     }
 
-    public abstract void evaluate (Scanner scanner);
+    public abstract void evaluate (String[] args, Scanner scanner);
+
+    protected abstract void status ();
+
+    protected abstract void welcome ();
     //endregion
 
 
     //region --Operations--
 
-    public static User register (String[] tokens) {
+    public static User register (String[] tokens) { // INCOMPLETE
         // Create a user ID
         String userID = new Query("user")
             .insert("fname", "lname")
@@ -66,6 +74,8 @@ public abstract class User {
         } catch (SQLException ex) {
             Utility.logError("Failed to get user type: "+ex);
         }
+        // Error logging
+        if (user == null) Utility.logError("Failed to login user with id: "+id);
         return user;
     }
     //endregion

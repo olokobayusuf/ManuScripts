@@ -21,15 +21,17 @@ public class ManuScripts {
         } 
         // REPL loop
         Scanner scanner = new Scanner(System.in);
+        String input;
         User user = null;
-        while (user == null && scanner.hasNextLine()) {
-            String tokens[] = scanner.nextLine().split("\\s");
+        while (user == null && (input = Utility.nextLine(scanner)) != null) {
+            String tokens[] = input.split("\\s");
             // Check command type
-            if (tokens[0].equals("register")) user = User.register(tokens);
-            if (tokens[0].equals("login")) user = User.login(tokens[1]);
+            if (tokens[0].equalsIgnoreCase("register")) user = User.register(tokens);
+            else if (tokens[0].equalsIgnoreCase("login")) user = User.login(tokens[1]);
+            else Utility.logError("Unrecognized command received. Try again");
         }
-        // Begin user UI
-        if (user != null) user.evaluate(scanner);
+        // Run user UI
+        while (user != null && (input = Utility.nextLine(scanner)) != null) user.evaluate(input.split("\\s"), scanner);
         // Say bye
         Utility.log("Bye!");
     }

@@ -21,6 +21,12 @@ build: start $(CLASSES) complete
 run:
 	@java -cp "$(BUILDDIR):$(LIBDIR)/*" $(TARGET)
 
+debug:
+	@java -cp "$(BUILDDIR):$(LIBDIR)/*" $(TARGET) --verbose
+
+test:
+	@java -cp "$(BUILDDIR):$(LIBDIR)/*" $(TARGET) --test
+
 %.class: %.java
 	$(JC) $(JFLAGS) $<
 
