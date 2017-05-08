@@ -4,6 +4,7 @@
 */
 
 import java.util.Scanner;
+import java.util.stream.Stream;
 
 public class ManuScripts {
 
@@ -12,14 +13,16 @@ public class ManuScripts {
     */
     public static void main (String[] args) {
         // Set verbose mode
-        Utility.setVerbose(args.length == 1 && (args[0].equals("--verbose") || args[0].equals("-v")));
-        // Create a scanner
-        Scanner scanner = new Scanner(System.in);
-        // Declare a user
-        User user = null;
+        Utility.setVerbose(Stream.of(args).anyMatch(arg -> arg.equalsIgnoreCase("--verbose") || arg.equalsIgnoreCase("-v")));
+        // Run tests
+        if (Stream.of(args).anyMatch(arg -> arg.equalsIgnoreCase("--test") || arg.equalsIgnoreCase("-t"))) {
+            Tests.test(args);
+            return;
+        } 
         // REPL loop
+        Scanner scanner = new Scanner(System.in);
+        User user = null;
         while (user == null && scanner.hasNextLine()) {
-            // Split
             String tokens[] = scanner.nextLine().split("\\s");
             // Check command type
             if (tokens[0].equals("register")) user = User.register(tokens);
