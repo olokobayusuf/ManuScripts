@@ -4,6 +4,7 @@
 */
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.IntStream;
 
@@ -11,12 +12,14 @@ public class Query {
 
     //region --Op vars--
 
-    private String[] attributes, data;
+    private String attributes[], data[], direct;
     private QueryType type;
     private final String table;
-    public final int SUCCESS = 0, FAILED = -1;
 
-    private enum QueryType {Insert, Update, Delete}
+    private int insertID;
+    private ResultSet result;
+
+    private enum QueryType {Insert, Update, Delete, Direct}
     private static Connection connection;
     private static final String
     SERVER = "jdbc:mysql://sunapee.cs.dartmouth.edu/",
@@ -33,10 +36,21 @@ public class Query {
     }
 
     public Query insert (String... attributes) {
-        type = QueryType.Insert;
+        this.type = QueryType.Insert;
         this.attributes = attributes;
         return this;
     }
+
+    public Query direct (String query) {
+        this.type = QueryType.Direct;
+        this.direct = query;
+        return this;
+    }
+
+    //endregion
+
+
+    //region --Data--
 
     public Query values (String... data) {
         this.data = data;
@@ -47,13 +61,17 @@ public class Query {
         // ...
         return this;
     }
+    //endregion
 
-    public int execute () {
-        int result = SUCCESS;
+
+    //region --Operations--
+
+    public Query execute () {
+        String query;
         switch (type) {
             case Insert:
                 // Build the query
-                String query = String.format(
+                query = String.format(
                     "INSERT INTO %s %s VALUES (%s);",
                     table,
                     attributes != null ? String.format("(%s)", String.join(", ", attributes)) : "",
@@ -65,14 +83,37 @@ public class Query {
                 try {
                     final PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
                     for (int i = 0; i < data.length; i++) statement.setString(i + 1, data[i]);
+                    // Execute
                     statement.executeUpdate();
-                    result = statement.getGeneratedKeys().getInt(1);
+                    insertID = statement.getGeneratedKeys().getInt(1);
                 } catch (SQLException ex) {
                     Utility.logError("Failed to execute query: "+ex);
-                    result = FAILED;
+                }
+                break;
+            case Direct:
+                // Build the query
+                query = direct;
+                // Log
+                Utility.logVerbose("Preparing query: "+query);
+                // Fill in statement
+                try {
+                    final PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+                    for (int i = 0; i < data.length; i++) statement.setString(i + 1, data[i]);
+                    // Execute
+                    result = statement.executeQuery();
+                } catch (SQLException ex) {
+                    Utility.logError("Failed to execute query: "+ex);
                 }
                 break;
         }
+        return this;
+    }
+
+    public String getID () {
+        return Integer.toString(insertID);
+    }
+
+    public ResultSet getResult () {
         return result;
     }
     //endregion

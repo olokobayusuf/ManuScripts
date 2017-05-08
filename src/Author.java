@@ -9,8 +9,9 @@ public class Author extends User {
 
     //region --Ctor--
 
-    public Author (int id) {
+    public Author (String id) {
         super(id);
+        Utility.log("Hello author!");
     }
     //endregion
 

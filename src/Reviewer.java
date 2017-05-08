@@ -9,8 +9,9 @@ public class Reviewer extends User {
 
     //region --Ctor--
 
-    public Reviewer (int id) {
+    public Reviewer (String id) {
         super(id);
+        Utility.log("Hello reviewer!");
     }
     //endregion
 

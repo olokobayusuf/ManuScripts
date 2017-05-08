@@ -9,8 +9,9 @@ public class Editor extends User {
 
     //region --Ctor--
 
-    public Editor (int id) {
+    public Editor (String id) {
         super(id);
+        Utility.log("Hello editor!");
     }
     //endregion
 

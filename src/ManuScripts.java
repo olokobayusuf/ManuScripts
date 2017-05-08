@@ -26,7 +26,7 @@ public class ManuScripts {
             String tokens[] = scanner.nextLine().split("\\s");
             // Check command type
             if (tokens[0].equals("register")) user = User.register(tokens);
-            if (tokens[0].equals("login")) user = User.login(Integer.parseInt(tokens[1]));
+            if (tokens[0].equals("login")) user = User.login(tokens[1]);
         }
         // Begin user UI
         if (user != null) user.evaluate(scanner);
