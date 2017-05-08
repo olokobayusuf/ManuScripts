@@ -9,8 +9,8 @@ public class Reviewer extends User {
 
     //region --Ctor--
 
-    public Reviewer (String firstName, String lastName, int... riCodes) {
-        
+    public Reviewer (int id) {
+        super(id);
     }
     //endregion
 

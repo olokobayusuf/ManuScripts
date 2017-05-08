@@ -19,7 +19,7 @@ buildAndRun: build run
 build: start $(CLASSES) complete
 
 run:
-	@java -cp ./$(BUILDDIR) $(TARGET)
+	@java -cp "$(BUILDDIR):$(LIBDIR)/*" $(TARGET)
 
 %.class: %.java
 	$(JC) $(JFLAGS) $<

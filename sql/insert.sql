@@ -3,7 +3,7 @@
  * Inserts generated test data 
  */
 
-USE `kfarmer_db`;
+USE `yusuf_db`;
 
 INSERT INTO `user` (`fname`,`lname`) VALUES 
 ("Vielka","Cruz"),
@@ -258,7 +258,8 @@ INSERT INTO `manuscript` (`author_id`,`editor_id`,`RICodes_code`,`title`,`status
 (8,2,13,"lorem eu metus In","underreview","2017-01-03 14:29:20",null,"temp-blob"),
 (12,2,13,"lorem ultra","published","2016-09-25 15:56:29",4,"temp-blob"),
 (3,2,39,"mauris mollis","published","2016-09-25 15:56:29",5,"temp-blob"),
-(5,2,33,"Phasellus ipsis","published","2016-09-25 15:56:29",9,"temp-blob");
+(5,2,33,"Phasellus ipsis","published","2016-09-25 15:56:29",9,"temp-blob"),
+(7,1,30,"diam ats","accepted","2016-07-20 19:23:23",16,"temp-blob");
 
 
 INSERT INTO `review` (`manuscript_id`,`reviewer_id`,`dateSent`) VALUES 

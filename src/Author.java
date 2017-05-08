@@ -9,8 +9,8 @@ public class Author extends User {
 
     //region --Ctor--
 
-    public Author (String firstName, String lastName, String email, String address) {
-
+    public Author (int id) {
+        super(id);
     }
     //endregion
 

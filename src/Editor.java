@@ -9,8 +9,8 @@ public class Editor extends User {
 
     //region --Ctor--
 
-    public Editor (String firstName, String lastName) {
-        
+    public Editor (int id) {
+        super(id);
     }
     //endregion
 
