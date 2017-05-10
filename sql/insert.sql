@@ -41,59 +41,37 @@ INSERT INTO `editor` (`user_id`) VALUES
 (1),
 (2);
     
-INSERT INTO `affiliation` (`id`,`institution`) VALUES 
-(1,"Morbi Vehicula Pellentesque LLC"),
-(2,"Dolor Donec Industries"),
-(3,"Auctor Velit Corp."),
-(4,"Morbi Metus LLP"),
-(5,"Turpis Nec Mauris Limited"),
-(6,"Lorem Company"),
-(7,"Aliquam Nisl Corp."),
-(8,"Mauris Elit Company"),
-(9,"Magna Duis Dignissim Ltd"),
-(10,"Curabitur Inc."),
-(11,"Vehicula Risus Limited"),
-(12,"Blandit Consulting"),
-(13,"Sollicitudin Corporation"),
-(14,"Purus Company"),
-(15,"Ut Foundation"),
-(16,"Sem Vitae Aliquam Consulting"),
-(17,"Mollis Lectus Pede Corporation"),
-(18,"Ac Tellus Corp."),
-(19,"At Egestas A Corporation"),
-(20,"Rutrum Lorem Inc.");
+INSERT INTO `author` (`user_id`,`address`,`email`,`affiliation`) VALUES 
+(3,"Ap #367-6654 Lorem Rd.","ac.ipsum@libero.edu","Morbi Vehicula Pellentesque LLC"),
+(4,"P.O. Box 732, 1502 Arcu. Street","Cras.vehicula@ullamcorper.com","Dolor Donec Industries"),
+(5,"Ap #618-9798 Eleifend St.","ac.mattis@leoMorbi.edu","Auctor Velit Corp."),
+(6,"P.O. Box 814, 4043 Velit. Road","sociis.natoque@Mauris.ca","Morbi Metus LLP"),
+(7,"P.O. Box 318, 791 Lorem Road","vitae.sodales.nisi@egestasligula.net","Turpis Nec Mauris Limited"),
+(8,"Ap #555-8087 Nulla Road","dolor@nequeet.ca","Lorem Company"),
+(9,"407-5392 Suspendisse Rd.","Proin.vel@lobortisauguescelerisque.co.uk","Aliquam Nisl Corp."),
+(10,"Ap #330-2509 Lorem Street","aliquam.eros.turpis@cursus.com","Magna Duis Dignissim Ltd"),
+(11,"Ap #369-3632 Hendrerit Rd.","orci.sem@rhoncusidmollis.ca","Curabitur Inc."),
+(12,"7180 Amet, Street","in.sodales.elit@Phasellusvitaemauris.org","Purus Company");
 
-INSERT INTO `author` (`user_id`,`address`,`email`,`affiliation_id`) VALUES 
-(3,"Ap #367-6654 Lorem Rd.","ac.ipsum@libero.edu",3),
-(4,"P.O. Box 732, 1502 Arcu. Street","Cras.vehicula@ullamcorper.com",5),
-(5,"Ap #618-9798 Eleifend St.","ac.mattis@leoMorbi.edu",4),
-(6,"P.O. Box 814, 4043 Velit. Road","sociis.natoque@Mauris.ca",15),
-(7,"P.O. Box 318, 791 Lorem Road","vitae.sodales.nisi@egestasligula.net",20),
-(8,"Ap #555-8087 Nulla Road","dolor@nequeet.ca",9),
-(9,"407-5392 Suspendisse Rd.","Proin.vel@lobortisauguescelerisque.co.uk",4),
-(10,"Ap #330-2509 Lorem Street","aliquam.eros.turpis@cursus.com",8),
-(11,"Ap #369-3632 Hendrerit Rd.","orci.sem@rhoncusidmollis.ca",4),
-(12,"7180 Amet, Street","in.sodales.elit@Phasellusvitaemauris.org",10);
-
-INSERT INTO `reviewer` (`user_id`,`email`,`affiliation_id`) VALUES 
-(13,"orci.Phasellus@nequevitaesemper.org",8),
-(14,"libero.lacus.varius@lobortisultricesVivamus.edu",1),
-(15,"orci@miacmattis.com",19),
-(16,"lacus@posuereat.org",4),
-(17,"ridiculus@semperauctor.net",14),
-(18,"sollicitudin@interdumlibero.edu",13),
-(19,"vehicula@posuereenimnisl.ca",1),
-(20,"aliquam.eu@a.co.uk",15),
-(21,"dolor.vitae@atortorNunc.org",15),
-(22,"Etiam@felisorciadipiscing.ca",18),
-(23,"mollis.Duis@insodales.org",15),
-(24,"Donec@facilisismagnatellus.net",16),
-(25,"nec@molestiearcu.ca",16),
-(26,"malesuada.id.erat@molestie.com",3),
-(27,"Sed.id.risus@libero.org",19),
-(28,"nibh.Phasellus@aliquetsemut.org",17),
-(29,"non.vestibulum@sapiengravidanon.edu",1),
-(30,"eu.arcu@risusa.ca",8);
+INSERT INTO `reviewer` (`user_id`,`email`,`affiliation`) VALUES 
+(13,"orci.Phasellus@nequevitaesemper.org","Ut Foundation"),
+(14,"libero.lacus.varius@lobortisultricesVivamus.edu","Sem Vitae Aliquam Consulting"),
+(15,"orci@miacmattis.com","Mollis Lectus Pede Corporation"),
+(16,"lacus@posuereat.org","Ac Tellus Corp."),
+(17,"ridiculus@semperauctor.net","At Egestas A Corporation"),
+(18,"sollicitudin@interdumlibero.edu","Rutrum Lorem Inc."),
+(19,"vehicula@posuereenimnisl.ca","Dolor Donec Industries"),
+(20,"aliquam.eu@a.co.uk","Turpis Nec Mauris Limited"),
+(21,"dolor.vitae@atortorNunc.org","Auctor Velit Corp."),
+(22,"Etiam@felisorciadipiscing.ca","Turpis Nec Mauris Limited"),
+(23,"mollis.Duis@insodales.org","Aliquam Nisl Corp."),
+(24,"Donec@facilisismagnatellus.net","Magna Duis Dignissim Ltd"),
+(25,"nec@molestiearcu.ca","Curabitur Inc."),
+(26,"malesuada.id.erat@molestie.com","Ac Tellus Corp."),
+(27,"Sed.id.risus@libero.org","Lorem Company"),
+(28,"nibh.Phasellus@aliquetsemut.org","Purus Company"),
+(29,"non.vestibulum@sapiengravidanon.edu","Morbi Metus LLP"),
+(30,"eu.arcu@risusa.ca","Turpis Nec Mauris Limited");
 
 /* Given to us */
 INSERT INTO RICodes (interest) VALUES
