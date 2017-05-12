@@ -20,7 +20,8 @@ public class Reviewer extends User {
 
     @Override
     public void evaluate (String[] args, Scanner scanner) {
-
+        if (args[0].equalsIgnoreCase("status")) status();
+        else Utility.logError("Unrecognized command received. Try again");
     }
     //endregion
 
@@ -31,11 +32,7 @@ public class Reviewer extends User {
     protected void welcome () {
         Utility.logVerbose("Starting reviewer UI...");
         // Query name and address
-        ResultSet result = new Query("user")
-            .select("fname", "lname")
-            .where("id = ?", id)
-            .execute()
-            .getResult();
+        ResultSet result = new Query("SELECT fname, lname FROM user WHERE id = ?").with(id).execute();
         // Welcome :)
         try {
             result.next();
@@ -50,8 +47,12 @@ public class Reviewer extends User {
     }
 
     @Override
-    protected void status () {
+    protected void status () { // INCOMPLETE
 
+    }
+
+    private void review () { // INCOMPLETE
+        
     }
     //endregion
 }

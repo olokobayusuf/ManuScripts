@@ -21,23 +21,15 @@ public class Tests {
 
     static void insertTest () {
         // Create a user
-        String id = new Query("user")
-            .insert("fname", "lname")
-            .values("Lanre", "Olokoba")
-            .execute()
-            .getID();
+        Integer id = new Query("INSERT INTO user (fname, lname) VALUES (?, ?)").with("Lanre", "Olokoba").insert();
         // Log
         Utility.log("Created new user with ID: "+id);
     }
 
     static void userTypeTest () {
         final int userID = 21;
-        // Exeucte a direct query
-        ResultSet result = new Query(null)
-            .direct("SELECT 'author' AS author, COUNT(*) FROM author WHERE user_id = ? UNION SELECT 'editor' AS editor, COUNT(*) FROM editor WHERE user_id = ? UNION SELECT 'reviewer' as reviewer, COUNT(*) FROM reviewer WHERE user_id = ?")
-            .values(Collections.nCopies(3, Integer.toString(userID)).toArray(new String[0]))
-            .execute()
-            .getResult();
+        // Exeucte a query
+        ResultSet result = new Query("SELECT 'author' AS author, COUNT(*) FROM author WHERE user_id = ? UNION SELECT 'editor' AS editor, COUNT(*) FROM editor WHERE user_id = ? UNION SELECT 'reviewer' as reviewer, COUNT(*) FROM reviewer WHERE user_id = ?").with(userID, userID, userID).execute();
         // Iterate and print
         String userType = "None";
         try {
