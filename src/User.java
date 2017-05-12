@@ -31,7 +31,7 @@ public abstract class User {
 
     //region --Operations--
 
-    public static User register (String[] tokens) { // INCOMPLETE
+    public static User register (String[] tokens) { // INCOMPLETE // Reviewer RI code // Author affiliation
         // Create a user ID
         int userID = new Query("INSERT INTO user (fname, lname) VALUES (?, ?)").with(tokens[2], tokens[3]).insert();
         // Register the user type
