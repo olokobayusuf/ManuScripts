@@ -20,7 +20,15 @@ public class Editor extends User {
 
     @Override
     public void evaluate (String[] args, Scanner scanner) {
-
+        if (args[0].equalsIgnoreCase("status")) status();
+        else if (args[0].equalsIgnoreCase("assign")) ;
+        else if (args[0].equalsIgnoreCase("accept")) accept(args[1]);
+        else if (args[0].equalsIgnoreCase("reject")) reject(args[1]);
+        else if (args[0].equalsIgnoreCase("typeset")) typeset(args[1], args[2]);
+        else if (args[0].equalsIgnoreCase("issue")) ;
+        else if (args[0].equalsIgnoreCase("schedule")) ;
+        else if (args[0].equalsIgnoreCase("publish")) ;
+        else Utility.logError("Unrecognized command received. Try again");
     }
     //endregion
 
@@ -31,11 +39,7 @@ public class Editor extends User {
     protected void welcome () {
         Utility.logVerbose("Starting editor UI...");
         // Query name and address
-        ResultSet result = new Query("user")
-            .select("fname", "lname")
-            .where("id = ?", id)
-            .execute()
-            .getResult();
+        ResultSet result = new Query("SELECT fname, lname FROM user WHERE id = ?").with(id).execute();
         // Welcome :)
         try {
             result.next();
@@ -51,6 +55,49 @@ public class Editor extends User {
 
     @Override
     protected void status () {
+        Utility.log("\nStatus: ");
+        // Get all manuscripts
+        ResultSet manuscripts = new Query("SELECT * FROM manuscript ORDER BY FIELD(status, 'submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'), id").execute();
+        // Print header
+        try {
+            int columns = manuscripts.getMetaData().getColumnCount();
+            for (int i = 1; i <= columns; i++) System.out.format("%-13s", manuscripts.getMetaData().getColumnName(i));
+            System.out.println("");
+            // Print info
+            while (manuscripts.next()) {
+                for (int i = 1; i <= columns; i++) System.out.format("%-13s", manuscripts.getObject(i) instanceof byte[] ? "BLOB" : manuscripts.getObject(i));
+                System.out.println("");
+            }
+        } catch (SQLException ex) {
+            Utility.logError("Failed to retrieve status: "+ex);
+        }
+    }
+
+    private void assign () { // INCOMPLETE
+
+    }
+
+    private void accept (String id) {
+        new Query("UPDATE manuscript SET status = 'accepted', timestamp = NOW() WHERE id = ?").with(id).update();
+    }
+
+    private void reject (String id) {
+        new Query("UPDATE manuscript SET status = 'rejected', timestamp = NOW() WHERE id = ?").with(id).update();
+    }
+
+    private void typeset (String id, String pages) {
+        new Query("UPDATE manuscript SET status = 'typeset', timestamp = NOW(), pageCount = ? WHERE id = ?").with(pages, id).update();
+    }
+
+    private void issue () { // INCOMPLETE
+        
+    }
+
+    private void schedule () { // INCOMPLETE
+
+    }
+
+    private void publish () { // INCOMPLETE
 
     }
     //endregion

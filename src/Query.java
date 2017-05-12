@@ -13,15 +13,9 @@ public class Query {
 
     //region --Op vars--
 
-    private QueryType type;
-    private String attributes[], data[], direct;
-    private HashMap<String, String> constraints = new HashMap<>();
-    private final String table;
+    private final String query;
+    private Object values[] = {};
 
-    private int insertID;
-    private ResultSet result;
-
-    private enum QueryType {Insert, Update, Select, Delete, Direct}
     private static Connection connection;
     private static final String
     SERVER = "jdbc:mysql://sunapee.cs.dartmouth.edu/",
@@ -33,117 +27,57 @@ public class Query {
 
     //region --Client API--
 
-    public Query (String table) {
-        this.table = table;
+    public Query (String query) {
+        this.query = query;
     }
 
-    public Query insert (String... attributes) {
-        this.type = QueryType.Insert;
-        this.attributes = attributes;
+    public Query with (Object... values) {
+        this.values = values;
         return this;
     }
 
-    public Query select (String... attributes) {
-        this.type = QueryType.Select;
-        this.attributes = attributes;
-        return this;
+    public int insert () {
+        try {
+            PreparedStatement statement = prepare();
+            statement.executeUpdate();
+            return statement.getGeneratedKeys().getInt(1);
+        } catch (SQLException ex) {
+            Utility.logError("Failed to execute query: "+ex);
+        }
+        return -1;
     }
 
-    public Query direct (String query) {
-        this.type = QueryType.Direct;
-        this.direct = query;
-        return this;
+    public ResultSet execute () {
+        try {
+            return prepare().executeQuery();
+        } catch (SQLException ex) {
+            Utility.logError("Failed to execute query: "+ex);
+        }
+        return null;
     }
 
-    //endregion
-
-
-    //region --Data--
-
-    public Query values (String... data) {
-        this.data = data;
-        return this;
-    }
-
-    public Query where (String constraint, String data) {
-        constraints.put(constraint, data);
-        return this;
+    public void update () {
+        try {
+            prepare().executeUpdate();
+        } catch (SQLException ex) {
+            Utility.logError("Failed to execute query: "+ex);
+        }
     }
     //endregion
 
 
     //region --Operations--
 
-    public Query execute () {
-        String query;
-        switch (type) {
-            case Insert:
-                // Build the query
-                query = String.format(
-                    "INSERT INTO %s %s VALUES (%s);",
-                    table,
-                    attributes != null ? String.format("(%s)", String.join(", ", attributes)) : "",
-                    String.join(", ", Collections.nCopies(data.length, "?"))
-                );
-                // Log
-                Utility.logVerbose("Preparing query: "+query);
-                // Fill in statement
-                try {
-                    final PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-                    for (int i = 0; i < data.length; i++) statement.setString(i + 1, data[i]);
-                    // Execute
-                    statement.executeUpdate();
-                    insertID = statement.getGeneratedKeys().getInt(1);
-                } catch (SQLException ex) {
-                    Utility.logError("Failed to execute query: "+ex);
-                }
-                break;
-            case Direct:
-                // Build the query
-                query = direct;
-                // Log
-                Utility.logVerbose("Preparing query: "+query);
-                // Fill in statement
-                try {
-                    final PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-                    for (int i = 0; i < data.length; i++) statement.setString(i + 1, data[i]);
-                    // Execute
-                    result = statement.executeQuery();
-                } catch (SQLException ex) {
-                    Utility.logError("Failed to execute query: "+ex);
-                }
-                break;
-            case Select:
-                // Build the query
-                query = String.format(
-                    "SELECT %s FROM %s %s;",
-                    attributes.length > 0 ? String.join(", ", attributes) : "*",
-                    table,
-                    constraints.size() > 0 ? "WHERE " + String.join(" AND ", constraints.keySet().toArray(new String[0])) : ""
-                );
-                // Log
-                Utility.logVerbose("Preparing query: "+query);
-                // Fill in statement
-                try {
-                    final PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
-                    int i = 0;
-                    for (String data : constraints.values()) statement.setString(i = i + 1, data);
-                    // Execute
-                    result = statement.executeQuery();
-                } catch (SQLException ex) {
-                    Utility.logError("Failed to execute query: "+ex);
-                }
-                break;
+    private PreparedStatement prepare () {
+        Utility.logVerbose("Preparing query: "+query);
+        try {
+            final PreparedStatement statement = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            for (int i = 0; i < values.length; i++) statement.setString(i + 1, values[i].toString());
+            return statement;
+        } catch (SQLException ex) {
+            Utility.logError("Failed to preapre query: "+ex);
         }
-        return this;
-    }
-
-    public String getID () {
-        return Integer.toString(insertID);
-    }
-
-    public ResultSet getResult () {
-        return result;
+        return null;
     }
     //endregion
 

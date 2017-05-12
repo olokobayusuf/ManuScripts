@@ -34,11 +34,9 @@ public class Author extends User {
     protected void welcome () {
         Utility.logVerbose("Starting author UI...");
         // Query name and address
-        ResultSet result = new Query(null)
-            .direct("SELECT fname, lname, address FROM user, author WHERE author.user_id = user.id AND user.id = ?")
-            .values(id)
-            .execute()
-            .getResult();
+        ResultSet result = new Query("SELECT fname, lname, address FROM user, author WHERE author.user_id = user.id AND user.id = ?")
+            .with(id)
+            .execute();
         // Welcome :)
         try {
             result.next();
@@ -54,12 +52,14 @@ public class Author extends User {
     }
 
     @Override
-    protected void status () {
-        
+    protected void status () { // INCOMPLETE
+        // SQL command?
     }
 
-    private void submit (String[] args) {
-        
+    private void submit (String[] args) { // INCOMPLETE
+        // Try submitting with RICode
+        // Let SQL reject it
+        // If not rejected, add each contributor
     }
 
     private void retract (String[] args, Scanner scanner) { // INCOMPLETE

@@ -19,7 +19,8 @@ public class ManuScripts {
             Tests.test(args);
             return;
         } 
-        // REPL loop
+        // Start REPL
+        Utility.log("Welcome to ManuScripts\nPlease authenticate yourself by registering or logging in:");
         Scanner scanner = new Scanner(System.in);
         String input;
         User user = null;
@@ -30,7 +31,7 @@ public class ManuScripts {
             else if (tokens[0].equalsIgnoreCase("login")) user = User.login(tokens[1]);
             else Utility.logError("Unrecognized command received. Try again");
         }
-        // Run user UI
+        // User REPL
         while (user != null && (input = Utility.nextLine(scanner)) != null) user.evaluate(input.split("\\s"), scanner);
         // Say bye
         Utility.log("Bye!");

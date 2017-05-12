@@ -33,19 +33,12 @@ public abstract class User {
 
     public static User register (String[] tokens) { // INCOMPLETE
         // Create a user ID
-        String userID = new Query("user")
-            .insert("fname", "lname")
-            .values(tokens[2], tokens[3])
-            .execute()
-            .getID();
+        int userID = new Query("INSERT INTO user (fname, lname) VALUES (?, ?)").with(tokens[2], tokens[3]).insert();
         // Register the user type
-        Query newType = null;
         String type = tokens[1];
-        if (type.equalsIgnoreCase("author")) newType = new Query("author").insert("user_id", "email", "address").values(userID, tokens[4], tokens[5]);
-        if (type.equalsIgnoreCase("editor")) newType = new Query("editor").insert("user_id").values(userID);
-        if (type.equalsIgnoreCase("reviewer")) newType = new Query("reviewer").insert("user_id", "email").values(userID, tokens[4]);
-        // Add the user
-        newType.execute();
+        if (type.equalsIgnoreCase("author")) new Query("INSERT INTO author (user_id, email, address) VALUES (?, ?, ?)").with(userID, tokens[4], tokens[5]).insert();
+        if (type.equalsIgnoreCase("editor")) new Query("INSERT INTO editor (user_id) VALUES (?)").with(userID).insert();
+        if (type.equalsIgnoreCase("reviewer")) new Query("INSERT INTO reviewer (user_id, email) VALUES (?, ?)").with(userID, tokens[4]).insert();
         // Add reviewer RICodes
         if (type.equalsIgnoreCase("reviewer")) {
             // ...
@@ -56,11 +49,7 @@ public abstract class User {
 
     public static User login (String id) {
         // Exeucte a direct query
-        ResultSet result = new Query(null)
-            .direct("SELECT 'author' AS author, COUNT(*) FROM author WHERE user_id = ? UNION SELECT 'editor' AS editor, COUNT(*) FROM editor WHERE user_id = ? UNION SELECT 'reviewer' as reviewer, COUNT(*) FROM reviewer WHERE user_id = ?")
-            .values(Collections.nCopies(3, id).toArray(new String[0]))
-            .execute()
-            .getResult();
+        ResultSet result = new Query("SELECT 'author' AS author, COUNT(*) FROM author WHERE user_id = ? UNION SELECT 'editor' AS editor, COUNT(*) FROM editor WHERE user_id = ? UNION SELECT 'reviewer' as reviewer, COUNT(*) FROM reviewer WHERE user_id = ?").with(id, id, id).execute();
         User user = null;
         try {
             while (result.next()) if (Integer.parseInt(result.getObject(2).toString()) == 1) {
