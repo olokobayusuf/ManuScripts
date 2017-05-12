@@ -56,10 +56,19 @@ public class Author extends User {
         // SQL command?
     }
 
-    private void submit (String[] args) { // INCOMPLETE
-        // Try submitting with RICode
-        // Let SQL reject it
-        // If not rejected, add each contributor
+    private void submit (String[] args) { // DEPLOY
+        // Arg checking
+        if (args.length > 5) {
+            Utility.logError("Cannot submit manuscript with more than three contributing authors");
+            return;
+        }
+        // Add manuscript
+        int manuscript = new Query("INSERT INTO manuscript (author_id, RICodes_code, title, status, timestamp) VALUES (?, ?, ?, ?, NOW())").with(id, args[2], args[1], "submitted").insert();
+        // Add contributors
+        for (int i = 3; i < args.length; i++) {
+            String[] name = args[i].split("\\s");
+            new Query("INSERT INTO contributors (manuscript_id, order, fname, lname)").with(manuscript, i - 2, name[0], name[name.length - 1]);
+        }
     }
 
     private void retract (String[] args, Scanner scanner) { // INCOMPLETE
