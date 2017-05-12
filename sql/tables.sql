@@ -14,8 +14,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema kfarmer_db
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `kfarmer_db` DEFAULT CHARACTER SET utf8 ;
-USE `kfarmer_db` ;
+CREATE SCHEMA IF NOT EXISTS `yusuf_db` DEFAULT CHARACTER SET utf8 ;
+USE `yusuf_db` ;
 
 -- -----------------------------------------------------
 -- Table `user`
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `review` (
   CONSTRAINT `manuscript`
     FOREIGN KEY (`manuscript_id`)
     REFERENCES `manuscript` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `reviewer`
     FOREIGN KEY (`reviewer_id`)
@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `feedback` (
   CONSTRAINT `fk_feedback_review1`
     FOREIGN KEY (`manuscript_id` , `reviewer_id`)
     REFERENCES `review` (`manuscript_id` , `reviewer_id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -235,7 +235,7 @@ CREATE TABLE IF NOT EXISTS `acceptance` (
   CONSTRAINT `for`
     FOREIGN KEY (`manuscript_id`)
     REFERENCES `manuscript` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `published in`
     FOREIGN KEY (`issue_id`)
@@ -260,7 +260,7 @@ CREATE TABLE IF NOT EXISTS `contributors` (
   CONSTRAINT `fk_manuscript_has_author_manuscript1`
     FOREIGN KEY (`manuscript_id`)
     REFERENCES `manuscript` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
