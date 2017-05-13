@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.IntStream;
+import java.util.function.Consumer;
 
 public class Query {
 
@@ -15,6 +16,7 @@ public class Query {
 
     private final String query;
     private Object values[] = {};
+    private Consumer<PreparedStatement> preparer;
 
     private static Connection connection;
     private static final String
@@ -36,31 +38,42 @@ public class Query {
         return this;
     }
 
+    public Query onPrepare (Consumer<PreparedStatement> consumer) {
+        preparer = consumer;
+        return this;
+    }
+
     public int insert () {
         try {
             PreparedStatement statement = prepare();
+            if (preparer != null) preparer.accept(statement);
             statement.executeUpdate();
-            return statement.getGeneratedKeys().getInt(1);
+            ResultSet result = statement.getGeneratedKeys();
+            if (result.next()) return result.getInt(1);
         } catch (SQLException ex) {
-            Utility.logError("Failed to execute query: "+ex);
+            Utility.logError("Failed to insert: "+ex);
         }
         return -1;
     }
 
     public ResultSet execute () {
         try {
-            return prepare().executeQuery();
+            PreparedStatement statement = prepare();
+            if (preparer != null) preparer.accept(statement);
+            return statement.executeQuery();
         } catch (SQLException ex) {
-            Utility.logError("Failed to execute query: "+ex);
+            Utility.logError("Failed to execute: "+ex);
         }
         return null;
     }
 
     public void update () {
         try {
-            prepare().executeUpdate();
+            PreparedStatement statement = prepare();
+            if (preparer != null) preparer.accept(statement);
+            statement.executeUpdate();
         } catch (SQLException ex) {
-            Utility.logError("Failed to execute query: "+ex);
+            Utility.logError("Failed to update: "+ex);
         }
     }
     //endregion
@@ -75,14 +88,14 @@ public class Query {
             for (int i = 0; i < values.length; i++) statement.setString(i + 1, values[i].toString());
             return statement;
         } catch (SQLException ex) {
-            Utility.logError("Failed to preapre query: "+ex);
+            Utility.logError("Failed to prepare query: "+ex);
         }
         return null;
     }
     //endregion
 
 
-    //region --Initialization--
+    //region --State Management--
 
     static {
         try {
@@ -90,11 +103,19 @@ public class Query {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             // Establish connection with MySQL
             connection = DriverManager.getConnection(SERVER + DATABASE, USERNAME, PASSWORD);
-            // Log
-            Utility.logVerbose(connection.isValid(1) ? "Successfully connected to server" : "Failed to connect to server");
+            Utility.logVerbose(connection.isValid(1) ? "Successfully connected to database" : "Failed to connect to database");
         } catch (Exception ex) {
-            // Log error
-            Utility.logError("Failed to connect to SQL server with exception: "+ex);
+            Utility.logError("Failed to connect to database: "+ex);
+        }
+    }
+
+    public static void close () {
+        try {
+            if (connection != null) connection.close();
+            connection = null;
+            Utility.logVerbose("Closed connection to database");
+        } catch (SQLException ex) {
+            Utility.logError("Failed to close connection to database: "+ex);
         }
     }
     //endregion

@@ -37,8 +37,8 @@ BEGIN
 		JOIN (SELECT * FROM review WHERE reviewer_id = OLD.user_id) AS reviews ON reviews.manuscript_id = manuscript.id
         SET manuscript.status = 'submitted'
         WHERE status = 'underreview';
-        SET message = CONCAT('UserException: Manuscript(s) has less than 3 reviewers, reset to submitted');
-		INSERT INTO `messages` (`message`) VALUES (message);
+        -- SET message = CONCAT('UserException: Manuscript(s) has less than 3 reviewers, reset to submitted');
+		-- INSERT INTO `messages` (`message`) VALUES (message);
     END IF;
     DELETE FROM `interests` where reviewer_id = OLD.user_id;
 	DELETE FROM `feedback` where reviewer_id = OLD.user_id;

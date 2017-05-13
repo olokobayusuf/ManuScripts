@@ -19,11 +19,13 @@ public class Author extends User {
     //region --REPL--
 
     @Override
-    public void evaluate (String[] args, Scanner scanner) {
+    public boolean evaluate (String[] args, Scanner scanner) {
         if (args[0].equalsIgnoreCase("status")) status();
         else if (args[0].equalsIgnoreCase("submit")) submit(args);
         else if (args[0].equalsIgnoreCase("retract")) retract(args, scanner);
+        else if (args[0].equalsIgnoreCase("logout")) return false;
         else Utility.logError("Unrecognized command received. Try again");
+        return true;
     }
     //endregion
 
@@ -52,8 +54,12 @@ public class Author extends User {
     }
 
     @Override
-    protected void status () { // INCOMPLETE
-        // SQL command?
+    protected void status () {
+        // Get the manuscripts
+        ResultSet result = new Query("SELECT manuscript_id, title, status, timestamp FROM LeadAuthorManuscripts WHERE user_id = ?").with(id).execute();
+        // Print
+        Utility.log("\nStatus: ");
+        Utility.print(result, true);
     }
 
     private void submit (String[] args) { // DEPLOY
@@ -69,16 +75,28 @@ public class Author extends User {
             String[] name = args[i].split("\\s");
             new Query("INSERT INTO contributors (manuscript_id, order, fname, lname)").with(manuscript, i - 2, name[0], name[name.length - 1]);
         }
+        // Log
+        Utility.log("Successfully submitted manuscript: "+manuscript);
     }
 
-    private void retract (String[] args, Scanner scanner) { // INCOMPLETE
+    private void retract (String[] args, Scanner scanner) {
+        // Check that it is ours
+        String manuscript = args[1];
+        try {
+            ResultSet authorID = new Query("SELECT author_id FROM manuscript WHERE id = ?").with(manuscript).execute(); authorID.next();
+            if (!authorID.getObject(1).toString().equalsIgnoreCase(id)) {
+                Utility.logError("You cannot delete a manuscript that is not yours");
+                return;
+            }
+        } catch (SQLException ex) {
+            Utility.logError("Unable to retrieve manuscript for deletion: "+ex);
+            return;
+        }
         // Are you sure?
         Utility.log("Are you sure? (Y/N)");
-        // Are they sure?
         if (!Utility.nextLine(scanner).toLowerCase().startsWith("y")) return;
-        // ...
-        Utility.log("Okay");
-        //new Query("manuscript").delete().where("id = ?", id);
+        // Delete
+        new Query("DELETE FROM manuscript WHERE id = ?").with(manuscript).update();
     }
     //endregion
 }

@@ -19,16 +19,18 @@ public class Editor extends User {
     //region --REPL--
 
     @Override
-    public void evaluate (String[] args, Scanner scanner) {
+    public boolean evaluate (String[] args, Scanner scanner) {
         if (args[0].equalsIgnoreCase("status")) status();
-        else if (args[0].equalsIgnoreCase("assign")) ;
+        else if (args[0].equalsIgnoreCase("assign")) assign(args[1], args[2]);
         else if (args[0].equalsIgnoreCase("accept")) accept(args[1]);
         else if (args[0].equalsIgnoreCase("reject")) reject(args[1]);
         else if (args[0].equalsIgnoreCase("typeset")) typeset(args[1], args[2]);
         else if (args[0].equalsIgnoreCase("issue")) ;
         else if (args[0].equalsIgnoreCase("schedule")) ;
         else if (args[0].equalsIgnoreCase("publish")) ;
+        else if (args[0].equalsIgnoreCase("logout")) return false;
         else Utility.logError("Unrecognized command received. Try again");
+        return true;
     }
     //endregion
 
@@ -55,26 +57,35 @@ public class Editor extends User {
 
     @Override
     protected void status () {
-        Utility.log("\nStatus: ");
         // Get all manuscripts
-        ResultSet manuscripts = new Query("SELECT * FROM manuscript ORDER BY FIELD(status, 'submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'), id").execute();
-        // Print header
-        try {
-            int columns = manuscripts.getMetaData().getColumnCount();
-            for (int i = 1; i <= columns; i++) System.out.format("%-13s", manuscripts.getMetaData().getColumnName(i));
-            System.out.println("");
-            // Print info
-            while (manuscripts.next()) {
-                for (int i = 1; i <= columns; i++) System.out.format("%-13s", manuscripts.getObject(i) instanceof byte[] ? "BLOB" : manuscripts.getObject(i));
-                System.out.println("");
-            }
-        } catch (SQLException ex) {
-            Utility.logError("Failed to retrieve status: "+ex);
-        }
+        ResultSet result = new Query("SELECT id, author_id, RICodes_code, title, status, timestamp FROM manuscript ORDER BY FIELD(status, 'submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'), id").execute();
+        // Print
+        Utility.log("\nStatus: ");
+        Utility.print(result, true);
     }
 
-    private void assign () { // INCOMPLETE
-
+    private void assign (String manuscript, String reviewer) {
+        try {
+            ResultSet result;
+            // Make sure that the manuscript is in the submitted or reviewing state
+            (result = new Query("SELECT COUNT(*) FROM manuscript WHERE id = ? AND (status = 'submitted' OR status = 'underreview')").with(manuscript).execute()).next();
+            if (Integer.parseInt(result.getObject(1).toString()) == 0) {
+                Utility.logError("You cannot assign a reviewer to this manuscript because it is not pending review");
+                return;
+            }
+            // Make sure the reviewer supports this RI code
+            (result = new Query("SELECT COUNT(*) FROM (SELECT * FROM interests WHERE reviewer_id = ?) AS contributor INNER JOIN (SELECT * FROM manuscript WHERE id = ?) AS manuscript ON contributor.RICodes_code = manuscript.RICodes_code").with(reviewer, manuscript).execute()).next();
+            if (Integer.parseInt(result.getObject(1).toString()) == 0) {
+                Utility.logError("You cannot assign this reviewer to this manuscript because they do not specialize in the subject");
+                return;
+            }
+            // Create a new review
+            new Query("INSERT INTO review (manuscript_id, reviewer_id, dateSent) VALUES (?, ?, NOW())").with(manuscript, reviewer).insert();
+            // Update the manuscript status
+            new Query("UPDATE manuscript SET status = 'underreview', timestamp = NOW() WHERE id = ?").with(manuscript).update();
+        } catch (SQLException ex) {
+            Utility.logError("Failed to assign manuscript: "+ex);
+        }
     }
 
     private void accept (String id) {
