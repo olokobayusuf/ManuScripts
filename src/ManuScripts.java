@@ -47,7 +47,7 @@ public final class ManuScripts {
             else if (tokens[0].equalsIgnoreCase("quit")) break;
             else Utility.logError("Unrecognized command received. Try again");
             // User REPL
-            while (user != null && (input = Utility.nextLine(scanner)) != null && user.evaluate(input.split("\\s"), scanner)) ;
+            while (user != null && (input = Utility.nextLine(scanner)) != null && user.evaluate(Utility.tokenize(input), scanner)) ;
             // Log out
             if (user != null) Utility.log("Logging out...");
             user = null;
