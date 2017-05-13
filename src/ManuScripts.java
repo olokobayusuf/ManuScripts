@@ -20,12 +20,22 @@ public class ManuScripts {
             return;
         } 
         // Start REPL
-        Utility.log("Welcome to ManuScripts\nPlease authenticate yourself by registering or logging in:");
+        Utility.log("Welcome to ManuScripts\nPlease enter the master key (16 characters):");
         Scanner scanner = new Scanner(System.in);
-        String input;
+        String input = "";
+        String tokens[];
+        String secretKey = "";
+        while (secretKey.length() != 16) {
+            input = Utility.nextLine(scanner);
+            tokens = input.split("\\s");
+            secretKey = tokens[0];
+            if (secretKey.length() != 16)
+                Utility.log("The master key must be 16 characters");
+        }
+        Utility.log("Please authenticate yourself by registering or logging in:");
         User user = null;
         while (user == null && (input = Utility.nextLine(scanner)) != null) {
-            String tokens[] = input.split("\\s");
+            tokens = input.split("\\s");
             // Check command type
             if (tokens[0].equalsIgnoreCase("register")) user = User.register(tokens);
             else if (tokens[0].equalsIgnoreCase("login")) user = User.login(tokens[1]);
