@@ -35,9 +35,11 @@ public abstract class User {
 
     //region --Operations--
 
-    public static User register (String[] tokens) { // DEPLOY
+    public static User register (String[] tokens, boolean authenticate) { // DEPLOY
         // Create a user ID
         Integer userID = new Query("INSERT INTO user (fname, lname) VALUES (?, ?)").with(tokens[2], tokens[3]).insert();
+        // Get credentials
+        if (authenticate) new Query("INSERT INTO credential (user_id, password) VALUES (?, ?)").with(userID, Auth.encrypt(new String(Auth.getPassword(true)))).insert();
         // Register the user type
         String type = tokens[1];
         if (type.equalsIgnoreCase("author")) {
@@ -64,11 +66,20 @@ public abstract class User {
         return null;
     }
 
-    public static User login (String id) {
-        // Exeucte a direct query
-        ResultSet result = new Query("SELECT 'author' AS author, COUNT(*) FROM author WHERE user_id = ? UNION SELECT 'editor' AS editor, COUNT(*) FROM editor WHERE user_id = ? UNION SELECT 'reviewer' as reviewer, COUNT(*) FROM reviewer WHERE user_id = ?").with(id, id, id).execute();
+    public static User login (String id, boolean authenticate) {
         User user = null;
         try {
+            ResultSet result;
+            // Authenticate
+            if (authenticate) {
+                (result = new Query("SELECT COUNT(*) FROM credential WHERE user_id = ? AND password = ?").with(id, new String(Auth.getPassword(false))).execute()).next();
+                if (Integer.parseInt(result.getObject(1).toString()) == 0) {
+                    Utility.logError("Failed to login user "+id+" because password is incorrect");
+                    return null;
+                }
+            }
+            // Exeucte a direct query
+            result = new Query("SELECT 'author' AS author, COUNT(*) FROM author WHERE user_id = ? UNION SELECT 'editor' AS editor, COUNT(*) FROM editor WHERE user_id = ? UNION SELECT 'reviewer' as reviewer, COUNT(*) FROM reviewer WHERE user_id = ?").with(id, id, id).execute();
             while (result.next()) if (Integer.parseInt(result.getObject(2).toString()) == 1) {
                 // Check user type
                 String userType = result.getObject(1).toString();

@@ -19,30 +19,21 @@ public final class ManuScripts {
             Tests.test(args);
             return;
         }
+        // Check for auth mode
+        boolean authenticate = Stream.of(args).anyMatch(arg -> arg.equalsIgnoreCase("--auth") || arg.equalsIgnoreCase("-a"));
         // Start REPL
         Utility.log("Welcome to ManuScripts");
-        Auth.getPassword();
-        //Utility.log("Please enter the master key (16 characters):");
+        if (authenticate) Auth.getMasterKey();
         Scanner scanner = new Scanner(System.in);
         String input = "";
-        String tokens[];
-        /*
-        String secretKey = "";
-        while (secretKey.length() != 16) {
-            input = Utility.nextLine(scanner);
-            tokens = input.split("\\s");
-            secretKey = tokens[0];
-            if (secretKey.length() != 16)
-                Utility.log("The master key must be 16 characters");
-        } */
         Utility.log("Please authenticate yourself by registering or logging in:");
         User user = null;
         while ((input = Utility.nextLine(scanner)) != null) {
-            tokens = Utility.tokenize(input);
+            String[] tokens = Utility.tokenize(input);
             if (tokens.length == 0) continue;
             // Check command type
-            if (tokens[0].equalsIgnoreCase("register")) user = User.register(tokens);
-            else if (tokens[0].equalsIgnoreCase("login")) user = User.login(tokens[1]);
+            if (tokens[0].equalsIgnoreCase("register")) user = User.register(tokens, authenticate);
+            else if (tokens[0].equalsIgnoreCase("login")) user = User.login(tokens[1], authenticate);
             else if (tokens[0].equalsIgnoreCase("exit")) break;
             else if (tokens[0].equalsIgnoreCase("quit")) break;
             else Utility.logError("Unrecognized command received. Try again");
