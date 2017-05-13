@@ -14,8 +14,6 @@ import java.security.*;
 
 public class Utility {
 
-    private static final String HEX = "0123456789ABCDEF"; // Really, Kevin? lol.
-
     //region --Logging--
 
     private static boolean verbose;
@@ -138,6 +136,8 @@ public class Utility {
     }
 
     private static String toHex (byte[] doFinal) {
+        final String HEX = "0123456789ABCDEF";
+
         StringBuffer result = new StringBuffer(2 * doFinal.length);
         for (int i = 0; i < doFinal.length; i++) result.append(HEX.charAt((doFinal[i]>>4)&0x0f)).append(HEX.charAt(doFinal[i]&0x0f));
         return result.toString();
