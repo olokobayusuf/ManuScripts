@@ -227,8 +227,8 @@ DROP TABLE IF EXISTS `acceptance` ;
 CREATE TABLE IF NOT EXISTS `acceptance` (
   `manuscript_id` INT NOT NULL,
   `issue_id` INT NOT NULL,
-  `position` INT NOT NULL,
-  `pageNum` INT NOT NULL,
+  `position` INT NULL,
+  `pageNum` INT NULL,
   PRIMARY KEY (`manuscript_id`),
   INDEX `for_idx` (`manuscript_id` ASC),
   INDEX `published in_idx` (`issue_id` ASC),
