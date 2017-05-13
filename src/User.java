@@ -35,7 +35,7 @@ public abstract class User {
 
     //region --Operations--
 
-    public static User register (String[] tokens, boolean authenticate) { // DEPLOY
+    public static User register (String[] tokens, boolean authenticate) {
         // Create a user ID
         Integer userID = new Query("INSERT INTO user (fname, lname) VALUES (?, ?)").with(tokens[2], tokens[3]).insert();
         // Get credentials
@@ -44,10 +44,12 @@ public abstract class User {
         String type = tokens[1];
         if (type.equalsIgnoreCase("author")) {
             new Query("INSERT INTO author (user_id, email, affiliation, address) VALUES (?, ?, ?, ?)").with(userID, tokens[4], tokens[5], tokens[6]).insert();
+            Utility.log("Registered author "+tokens[2]+" "+tokens[3]+" with ID: "+userID);
             return new Author(userID.toString());
         }
         if (type.equalsIgnoreCase("editor")) {
             new Query("INSERT INTO editor (user_id) VALUES (?)").with(userID).insert();
+            Utility.log("Registered editor "+tokens[2]+" "+tokens[3]+" with ID: "+userID);
             return new Editor(userID.toString());
         }
         if (type.equalsIgnoreCase("reviewer")) {
@@ -59,6 +61,7 @@ public abstract class User {
             // Add reviewer RI codes
             for (int i = 2; i < 5; i++) new Query("INSERT INTO interests (reviewer_id, RICodes_code) VALUES (?, ?)").with(userID, tokens[i]).insert();
             // Return reviewer
+            Utility.log("Registered reviewer "+tokens[2]+" "+tokens[3]+" with ID: "+userID);
             return new Reviewer(userID.toString());
         }
         // Return null
