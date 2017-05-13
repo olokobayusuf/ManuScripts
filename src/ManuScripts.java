@@ -24,6 +24,7 @@ public class ManuScripts {
         Scanner scanner = new Scanner(System.in);
         String input = "";
         String tokens[];
+        /*
         String secretKey = "";
         while (secretKey.length() != 16) {
             input = Utility.nextLine(scanner);
@@ -31,7 +32,7 @@ public class ManuScripts {
             secretKey = tokens[0];
             if (secretKey.length() != 16)
                 Utility.log("The master key must be 16 characters");
-        }
+        } */
         Utility.log("Please authenticate yourself by registering or logging in:");
         User user = null;
         while ((input = Utility.nextLine(scanner)) != null) {
