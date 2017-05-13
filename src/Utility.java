@@ -14,7 +14,7 @@ import java.security.*;
 
 public class Utility {
 
-    private final static String HEX = "0123456789ABCDEF";
+    private static final String HEX = "0123456789ABCDEF"; // Really, Kevin? lol.
 
     //region --Logging--
 
