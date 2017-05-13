@@ -12,7 +12,7 @@ import java.util.regex.*;
 import javax.crypto.*;
 import java.security.*;
 
-public class Utility {
+public final class Utility {
 
     //region --Logging--
 

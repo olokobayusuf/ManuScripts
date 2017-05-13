@@ -6,7 +6,7 @@
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-public class ManuScripts {
+public final class ManuScripts {
 
     /*
     * Application entry point. This passes on control to a suitable frontend
@@ -21,6 +21,7 @@ public class ManuScripts {
         }
         // Start REPL
         Utility.log("Welcome to ManuScripts");
+        Auth.getPassword();
         //Utility.log("Please enter the master key (16 characters):");
         Scanner scanner = new Scanner(System.in);
         String input = "";
