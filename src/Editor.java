@@ -25,9 +25,9 @@ public class Editor extends User {
         else if (args[0].equalsIgnoreCase("accept")) accept(args[1]);
         else if (args[0].equalsIgnoreCase("reject")) reject(args[1]);
         else if (args[0].equalsIgnoreCase("typeset")) typeset(args[1], args[2]);
-        else if (args[0].equalsIgnoreCase("issue")) ;
-        else if (args[0].equalsIgnoreCase("schedule")) ;
-        else if (args[0].equalsIgnoreCase("publish")) ;
+        else if (args[0].equalsIgnoreCase("issue")) issue(args[1], args[2]);
+        else if (args[0].equalsIgnoreCase("schedule")) schedule(args[1], args[2]);
+        else if (args[0].equalsIgnoreCase("publish")) publish(args[1]);
         else if (args[0].equalsIgnoreCase("logout")) return false;
         else Utility.logError("Unrecognized command received. Try again");
         return true;
@@ -100,16 +100,19 @@ public class Editor extends User {
         new Query("UPDATE manuscript SET status = 'typeset', timestamp = NOW(), pageCount = ? WHERE id = ?").with(pages, id).update();
     }
 
-    private void issue () { // INCOMPLETE
-        
+    private void issue (String year, String period) { // INCOMPLETE
+        new Query("INSERT INTO issue (year, period) VALUES (?, ?)").with(year, period).insert();
     }
 
-    private void schedule () { // INCOMPLETE
-
+    private void schedule (String manuscript, String issue) { // INCOMPLETE
+        new Query("INSERT INTO acceptance (manuscript_id, issue_id) VALUES (?, ?)").with(manuscript, issue).insert();
+        // Trigger checks if issue has already been published or total pages would be over 100
     }
 
-    private void publish () { // INCOMPLETE
-
+    private void publish (String issue) { // INCOMPLETE
+         new Query("INSERT INTO publish (issue_id, publishDate) VALUES (?, NOW())").with(issue).insert();
+         // triggers check if issue contains at least 1 manuscript before insert, 
+         // then update any related manuscripts with status after insert
     }
     //endregion
 }

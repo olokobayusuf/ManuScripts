@@ -69,11 +69,11 @@ public class Utility {
     public static void print (ResultSet result, boolean headers) {
         try {
             int columns = result.getMetaData().getColumnCount();
-            for (int i = 1; i <= columns; i++) System.out.format("%-13s", result.getMetaData().getColumnName(i));
+            for (int i = 1; i <= columns; i++) System.out.format("%-20s", result.getMetaData().getColumnName(i));
             System.out.println("");
             // Print info
             while (result.next()) {
-                for (int i = 1; i <= columns; i++) System.out.format("%-13s", result.getObject(i) == null ? "—" : result.getObject(i) instanceof byte[] ? "BLOB" : result.getObject(i));
+                for (int i = 1; i <= columns; i++) System.out.format("%-20s", result.getObject(i) == null ? "—" : result.getObject(i) instanceof byte[] ? "BLOB" : result.getObject(i));
                 System.out.println("");
             }
         } catch (SQLException ex) {

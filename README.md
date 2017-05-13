@@ -37,6 +37,18 @@ $ register reviewer <fname> <lname> <email> <affiliation> <RIcode1> (RIcode2) (R
 $ login <id>
 ```
 
+After logging in, you can logout of the current user with
+
+```
+$ logout
+```
+
+If not logged in, you can exit the system with
+
+```
+$ exit
+```
+
 
 ### When logged in as an author:
 
