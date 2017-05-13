@@ -3,10 +3,16 @@
  * Trigger definitions
  */
 
-USE `yusuf_db`;
+USE `kfarmer_db`;
 
 DROP TRIGGER IF EXISTS ricode_trigger;
 DROP TRIGGER IF EXISTS on_resign_trigger;
+DROP TRIGGER IF EXISTS on_schedule;
+DROP TRIGGER IF EXISTS before_publish;
+DROP TRIGGER IF EXISTS after_publish;
+DROP TRIGGER IF EXISTS new_issue;
+DROP TRIGGER IF EXISTS before_accept;
+
 
 DELIMITER $$
 
@@ -44,6 +50,73 @@ BEGIN
 	DELETE FROM `feedback` where reviewer_id = OLD.user_id;
     DELETE FROM `review` where reviewer_id = OLD.user_id;
 	SET SQL_SAFE_UPDATES = 1;
+END$$
+
+CREATE TRIGGER on_schedule BEFORE INSERT ON acceptance
+FOR EACH ROW
+BEGIN
+    DECLARE message VARCHAR(128); 
+    IF (
+        (SELECT Count(*) from publish WHERE issue_id = new.issue_id) > 0
+    ) THEN
+        SET message = CONCAT('UserException: That issue has been published');
+		SIGNAL SQLSTATE '45000' SET message_text = message;
+    END IF;
+    SET @total = (SELECT sum(pageCount) FROM acceptance JOIN manuscript ON manuscript_id = manuscript.id WHERE issue_id = new.issue_id);
+    IF (
+		 @total + (SELECT pageCount FROM manuscript WHERE id = new.manuscript_id) > 100
+	) THEN
+		SET message = CONCAT('UserException: An issue cannot have more than 100 pages');
+		SIGNAL SQLSTATE '45000' SET message_text = message;
+    END IF;
+    UPDATE manuscript
+    SET status = 'scheduled', timestamp = NOW()
+    WHERE id = new.manuscript_id;
+END$$
+
+CREATE TRIGGER before_publish BEFORE INSERT ON publish
+FOR EACH ROW
+BEGIN
+    DECLARE message VARCHAR(128); 
+    IF (
+        (SELECT Count(*) from acceptance WHERE issue_id = new.issue_id) = 0
+    ) THEN
+        SET message = CONCAT('UserException: There must be at least 1 manuscript in a published issue');
+		SIGNAL SQLSTATE '45000' SET message_text = message;
+    END IF;
+END$$
+
+CREATE TRIGGER after_publish AFTER INSERT ON publish
+FOR EACH ROW
+BEGIN
+	UPDATE manuscript
+    JOIN acceptance ON manuscript.id = manuscript_id
+	SET manuscript.status = 'published', manuscript.timestamp = NOW()
+	WHERE issue_id = NEW.issue_id;
+END$$
+
+CREATE TRIGGER new_issue BEFORE INSERT ON issue
+FOR EACH ROW
+BEGIN
+    DECLARE message VARCHAR(128); 
+    IF (
+        (SELECT Count(*) from issue WHERE year = new.year AND period = new.period) > 0
+    ) THEN
+        SET message = CONCAT('UserException: There is already an issue for that year and period');
+		SIGNAL SQLSTATE '45000' SET message_text = message;
+    END IF;
+END$$
+
+CREATE TRIGGER before_accept BEFORE UPDATE ON manuscript
+FOR EACH ROW
+BEGIN
+    DECLARE message VARCHAR(128); 
+    IF (
+        (NEW.status = "accepted") AND ((SELECT Count(*) FROM feedback WHERE manuscript_id = new.id) < 3)
+    ) THEN
+        SET message = CONCAT('UserException: There must be three completed reviews in order to accept a manuscript');
+		SIGNAL SQLSTATE '45000' SET message_text = message;
+    END IF;
 END$$
 
 DELIMITER ;

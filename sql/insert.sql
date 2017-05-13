@@ -3,7 +3,7 @@
  * Inserts generated test data 
  */
 
-USE `yusuf_db`;
+USE `kfarmer_db`;
 
 INSERT INTO `user` (`fname`,`lname`) VALUES 
 ("Vielka","Cruz"),
@@ -222,8 +222,8 @@ INSERT INTO `interests` (`reviewer_id`,`RICodes_code`) VALUES
 
 INSERT INTO `manuscript` (`author_id`,`editor_id`,`RICodes_code`,`title`,`status`,`timestamp`,`pageCount`, `doc`) VALUES 
 (12,1,16,"ridiculus","submitted","2017-01-14 23:12:52",null,"temp-blob"),
-(12,2,39,"Donec tempus, lorem fringilla","typeset","2016-10-06 20:09:21",12,"temp-blob"),
-(10,2,11,"turpis Aliquam adipiscing","submitted","2016-11-02 01:00:22",null,"temp-blob"),
+(12,2,39,"Donec tempus","typeset","2016-10-06 20:09:21",12,"temp-blob"),
+(10,2,11,"turpis Aliquam","submitted","2016-11-02 01:00:22",null,"temp-blob"),
 (3,2,44,"pretium aliquet,","underreview","2017-01-13 10:53:42",null,"temp-blob"),
 (10,1,39,"vulputate, lacus","rejected","2017-02-22 08:29:27",null,"temp-blob"),
 (4,2,42,"justo","accepted","2016-12-18 16:12:05",null,"temp-blob"),
@@ -232,7 +232,7 @@ INSERT INTO `manuscript` (`author_id`,`editor_id`,`RICodes_code`,`title`,`status
 (5,1,3,"aliquam","rejected","2017-03-28 06:57:28",null,"temp-blob"),
 (8,2,13,"non massa non","accepted","2017-04-11 09:58:30",null,"temp-blob"),
 (7,1,30,"diam at","scheduled","2016-07-20 19:23:23",16,"temp-blob"),
-(6,2,33,"varius ultrices, mauris","published","2016-09-25 15:56:29",2,"temp-blob"),
+(6,2,33,"varius ultrices","published","2016-09-25 15:56:29",2,"temp-blob"),
 (8,2,13,"lorem eu metus In","underreview","2017-01-03 14:29:20",null,"temp-blob"),
 (12,2,13,"lorem ultra","published","2016-09-25 15:56:29",4,"temp-blob"),
 (3,2,39,"mauris mollis","published","2016-09-25 15:56:29",5,"temp-blob"),
