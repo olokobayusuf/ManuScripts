@@ -75,6 +75,8 @@ public class Author extends User {
             String[] name = args[i].split("\\s");
             new Query("INSERT INTO contributors (manuscript_id, order, fname, lname)").with(manuscript, i - 2, name[0], name[name.length - 1]);
         }
+        // Log
+        Utility.log("Successfully submitted manuscript: "+manuscript);
     }
 
     private void retract (String[] args, Scanner scanner) {

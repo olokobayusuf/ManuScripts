@@ -20,7 +20,8 @@ public class ManuScripts {
             return;
         }
         // Start REPL
-        Utility.log("Welcome to ManuScripts\nPlease enter the master key (16 characters):");
+        Utility.log("Welcome to ManuScripts");
+        //Utility.log("Please enter the master key (16 characters):");
         Scanner scanner = new Scanner(System.in);
         String input = "";
         String tokens[];
@@ -38,7 +39,6 @@ public class ManuScripts {
         while ((input = Utility.nextLine(scanner)) != null) {
             tokens = Utility.tokenize(input);
             if (tokens.length == 0) continue;
-
             // Check command type
             if (tokens[0].equalsIgnoreCase("register")) user = User.register(tokens);
             else if (tokens[0].equalsIgnoreCase("login")) user = User.login(tokens[1]);

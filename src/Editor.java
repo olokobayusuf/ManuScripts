@@ -21,7 +21,7 @@ public class Editor extends User {
     @Override
     public boolean evaluate (String[] args, Scanner scanner) {
         if (args[0].equalsIgnoreCase("status")) status();
-        else if (args[0].equalsIgnoreCase("assign")) ;
+        else if (args[0].equalsIgnoreCase("assign")) assign(args[1], args[2]);
         else if (args[0].equalsIgnoreCase("accept")) accept(args[1]);
         else if (args[0].equalsIgnoreCase("reject")) reject(args[1]);
         else if (args[0].equalsIgnoreCase("typeset")) typeset(args[1], args[2]);
@@ -64,8 +64,28 @@ public class Editor extends User {
         Utility.print(result, true);
     }
 
-    private void assign () { // INCOMPLETE
-
+    private void assign (String manuscript, String reviewer) {
+        try {
+            ResultSet result;
+            // Make sure that the manuscript is in the submitted or reviewing state
+            (result = new Query("SELECT COUNT(*) FROM manuscript WHERE id = ? AND (status = 'submitted' OR status = 'underreview')").with(manuscript).execute()).next();
+            if (Integer.parseInt(result.getObject(1).toString()) == 0) {
+                Utility.logError("You cannot assign a reviewer to this manuscript because it is not pending review");
+                return;
+            }
+            // Make sure the reviewer supports this RI code
+            (result = new Query("SELECT COUNT(*) FROM (SELECT * FROM interests WHERE reviewer_id = ?) AS contributor INNER JOIN (SELECT * FROM manuscript WHERE id = ?) AS manuscript ON contributor.RICodes_code = manuscript.RICodes_code").with(reviewer, manuscript).execute()).next();
+            if (Integer.parseInt(result.getObject(1).toString()) == 0) {
+                Utility.logError("You cannot assign this reviewer to this manuscript because they do not specialize in the subject");
+                return;
+            }
+            // Create a new review
+            new Query("INSERT INTO review (manuscript_id, reviewer_id, dateSent) VALUES (?, ?, NOW())").with(manuscript, reviewer).insert();
+            // Update the manuscript status
+            new Query("UPDATE manuscript SET status = 'underreview', timestamp = NOW() WHERE id = ?").with(manuscript).update();
+        } catch (SQLException ex) {
+            Utility.logError("Failed to assign manuscript: "+ex);
+        }
     }
 
     private void accept (String id) {

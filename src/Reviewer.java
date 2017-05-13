@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 
 public class Reviewer extends User {
 
+    private boolean resigned;
+
     //region --Ctor--
 
     public Reviewer (String id) {
@@ -21,9 +23,13 @@ public class Reviewer extends User {
 
     @Override
     public boolean evaluate (String[] args, Scanner scanner) {
+        // Check if the reviewer resigned
+        if (resigned) return false;
+        // Evaluate
         if (args[0].equalsIgnoreCase("status")) status();
         else if (args[0].equalsIgnoreCase("accept")) review(true, args);
         else if (args[0].equalsIgnoreCase("reject")) review(false, args);
+        else if (args[0].equalsIgnoreCase("resign")) resign(scanner);
         else if (args[0].equalsIgnoreCase("logout")) return false;
         else Utility.logError("Unrecognized command received. Try again");
         return true;
@@ -83,8 +89,18 @@ public class Reviewer extends User {
             }).insert();
     }
 
-    private void resign () { // INCOMPLETE
-
+    private void resign (Scanner scanner) {
+        // Are you sure?
+        Utility.log("Are you sure? (Y/N)");
+        if (!Utility.nextLine(scanner).toLowerCase().startsWith("y")) return;
+        // Delete from reviewers
+        new Query("DELETE FROM reviewer WHERE user_id = ?").with(id).update();
+        // Delete the user
+        new Query("DELETE FROM user WHERE id = ?").with(id).update();
+        // Thank you :)
+        Utility.log("Thank you for your service :)\nHit the return key");
+        // Logout
+        resigned = true;
     }
     //endregion
 }
