@@ -283,6 +283,23 @@ CREATE TABLE IF NOT EXISTS `publish` (
 ENGINE = InnoDB;
 
 
+-- -----------------------------------------------------
+-- Table `credential`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `credential` ;
+
+CREATE TABLE IF NOT EXISTS `credential` (
+  `user_id` INT NOT NULL,
+  `password` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `fk_credential_user1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `user` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
