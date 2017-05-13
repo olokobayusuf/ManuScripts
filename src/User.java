@@ -72,7 +72,7 @@ public abstract class User {
             ResultSet result;
             // Authenticate
             if (authenticate) {
-                (result = new Query("SELECT COUNT(*) FROM credential WHERE user_id = ? AND password = ?").with(id, new String(Auth.getPassword(false))).execute()).next();
+                (result = new Query("SELECT COUNT(*) FROM credential WHERE user_id = ? AND password = ?").with(id, Auth.encrypt(new String(Auth.getPassword(false)))).execute()).next();
                 if (Integer.parseInt(result.getObject(1).toString()) == 0) {
                     Utility.logError("Failed to login user "+id+" because password is incorrect");
                     return null;

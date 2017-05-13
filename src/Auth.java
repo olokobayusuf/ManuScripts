@@ -11,7 +11,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.*;
 import java.security.*;
 
-public final class Auth {
+public final class Auth { // Ideally, hashing would be enough
 
     private static char[] masterKey;
 
@@ -23,7 +23,7 @@ public final class Auth {
     public static char[] getPassword (boolean confirm) {
         char[] password, repeat;
         // Security paranoia
-        if (confirm) return System.console().readPassword("Enter password: ");
+        if (!confirm) return System.console().readPassword("Enter password: ");
         if (Arrays.equals(password = System.console().readPassword("Enter password: "), repeat = System.console().readPassword("Confirm password: "))) {
             Arrays.fill(repeat, (char)0x00);
             return password;
@@ -40,7 +40,7 @@ public final class Auth {
      */
     public static String encrypt (String text) {
         try {
-            Key sk = new SecretKeySpec(toBytes(masterKey), "AES");
+            Key sk = new SecretKeySpec(new String(masterKey).getBytes(), "AES");
             Cipher aesCipher = Cipher.getInstance("AES");
             aesCipher.init(Cipher.ENCRYPT_MODE, sk);
             byte[] results = aesCipher.doFinal(text.getBytes());
@@ -53,7 +53,7 @@ public final class Auth {
 
     public static String decrypt (String text) {
         try {
-            Key sk = new SecretKeySpec(toBytes(masterKey), "AES");
+            Key sk = new SecretKeySpec(new String(masterKey).getBytes(), "AES");
             Cipher aesCipher = Cipher.getInstance("AES");
             aesCipher.init(Cipher.DECRYPT_MODE, sk);
             byte[] results = aesCipher.doFinal(toBytes(text));
@@ -85,6 +85,7 @@ public final class Auth {
     /**
      * Encode character sequence to bytes without going through String to prevent security hole
      */
+    /*
     private static byte[] toBytes (char[] sequence) {
         CharBuffer chars = CharBuffer.wrap(sequence);
         ByteBuffer bytes = Charset.forName("UTF-8").encode(chars);
@@ -93,4 +94,5 @@ public final class Auth {
         Arrays.fill(bytes.array(), (byte)0);
         return data;
     }
+    */
 }
