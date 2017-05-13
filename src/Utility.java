@@ -1,9 +1,13 @@
-import java.util.Scanner;
-
 /*
 *   ManuScripts
 *   CS 61 - 17S
 */
+
+import java.util.Scanner;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.sql.*;
+import java.util.regex.*;
 
 public class Utility {
 
@@ -38,6 +42,40 @@ public class Utility {
         else {
             log(""); // Go to a new line
             return null;
+        }
+    }
+    
+    /** 
+     * Tokenize an input string, paying attention to substrings within quotation marks
+     * 'hello there "Professor X"' -> 'hello', 'there', 'Professor X'
+     * Credits: http://stackoverflow.com/questions/366202/regex-for-splitting-a-string-using-space-when-not-surrounded-by-single-or-double
+    */
+    public static String[] tokenize (String input) {
+        ArrayList<String> tokens = new ArrayList<String>();
+        Matcher matcher = Pattern.compile("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'").matcher(input);
+        while (matcher.find())
+            if (matcher.group(1) != null) tokens.add(matcher.group(1)); // Add double-quoted string without the quotes
+            else if (matcher.group(2) != null) tokens.add(matcher.group(2)); // Add single-quoted string without the quotes
+            else tokens.add(matcher.group()); // Add unquoted word
+        return tokens.toArray(new String[] {});
+    }
+    //endregion
+
+
+    //region --Output--
+
+    public static void print (ResultSet result, boolean headers) {
+        try {
+            int columns = result.getMetaData().getColumnCount();
+            for (int i = 1; i <= columns; i++) System.out.format("%-13s", result.getMetaData().getColumnName(i));
+            System.out.println("");
+            // Print info
+            while (result.next()) {
+                for (int i = 1; i <= columns; i++) System.out.format("%-13s", result.getObject(i) == null ? "—" : result.getObject(i) instanceof byte[] ? "BLOB" : result.getObject(i));
+                System.out.println("");
+            }
+        } catch (SQLException ex) {
+            Utility.logError("Failed to print result: "+ex);
         }
     }
     //endregion

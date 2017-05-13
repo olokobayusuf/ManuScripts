@@ -71,6 +71,6 @@ DROP PROCEDURE IF EXISTS ReviewStatus;
 DELIMITER $$
 CREATE PROCEDURE ReviewStatus (reviewer INT)
     BEGIN
-        SELECT * FROM ReviewStatuses WHERE user_id = reviewer;
+        SELECT manuscript_id, title, dateSent, appropriateness, clarity, methodology, contribution, recommendation FROM ReviewStatuses WHERE user_id = reviewer;
     END $$
 DELIMITER ;
