@@ -72,15 +72,15 @@ $ accept <manu#>
 ```
 
 ```
-typeset <manu#> <pp>
+$ typeset <manu#> <pp>
 ```
 
 ```
-schedule <manu#> <issue>
+$ schedule <manu#> <issue>
 ```
 
 ```
-publish <issue>
+$ publish <issue>
 ```
 
 ### When logged in as a reviewer:
