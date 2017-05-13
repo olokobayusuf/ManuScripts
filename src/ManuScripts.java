@@ -18,7 +18,7 @@ public class ManuScripts {
         if (Stream.of(args).anyMatch(arg -> arg.equalsIgnoreCase("--test") || arg.equalsIgnoreCase("-t"))) {
             Tests.test(args);
             return;
-        } 
+        }
         // Start REPL
         Utility.log("Welcome to ManuScripts\nPlease enter the master key (16 characters):");
         Scanner scanner = new Scanner(System.in);
@@ -34,16 +34,24 @@ public class ManuScripts {
         }
         Utility.log("Please authenticate yourself by registering or logging in:");
         User user = null;
-        while (user == null && (input = Utility.nextLine(scanner)) != null) {
-            tokens = input.split("\\s");
+        while ((input = Utility.nextLine(scanner)) != null) {
+            tokens = Utility.tokenize(input);
+            if (tokens.length == 0) continue;
+
             // Check command type
             if (tokens[0].equalsIgnoreCase("register")) user = User.register(tokens);
             else if (tokens[0].equalsIgnoreCase("login")) user = User.login(tokens[1]);
+            else if (tokens[0].equalsIgnoreCase("exit")) break;
+            else if (tokens[0].equalsIgnoreCase("quit")) break;
             else Utility.logError("Unrecognized command received. Try again");
+            // User REPL
+            while (user != null && (input = Utility.nextLine(scanner)) != null && user.evaluate(input.split("\\s"), scanner)) ;
+            // Log out
+            if (user != null) Utility.log("Logging out...");
+            user = null;
         }
-        // User REPL
-        while (user != null && (input = Utility.nextLine(scanner)) != null) user.evaluate(input.split("\\s"), scanner);
         // Say bye
         Utility.log("Bye!");
+        Query.close();
     }
 }

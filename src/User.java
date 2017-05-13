@@ -21,7 +21,11 @@ public abstract class User {
         status();
     }
 
-    public abstract void evaluate (String[] args, Scanner scanner);
+    /**
+     * User REPL evaluator
+     * Returns whether the user is still performing tasks (whether logout hasn't been called)
+     */
+    public abstract boolean evaluate (String[] args, Scanner scanner);
 
     protected abstract void status ();
 
@@ -31,19 +35,32 @@ public abstract class User {
 
     //region --Operations--
 
-    public static User register (String[] tokens) { // INCOMPLETE // Reviewer RI code // Author affiliation
+    public static User register (String[] tokens) { // DEPLOY
         // Create a user ID
-        int userID = new Query("INSERT INTO user (fname, lname) VALUES (?, ?)").with(tokens[2], tokens[3]).insert();
+        Integer userID = new Query("INSERT INTO user (fname, lname) VALUES (?, ?)").with(tokens[2], tokens[3]).insert();
         // Register the user type
         String type = tokens[1];
-        if (type.equalsIgnoreCase("author")) new Query("INSERT INTO author (user_id, email, address) VALUES (?, ?, ?)").with(userID, tokens[4], tokens[5]).insert();
-        if (type.equalsIgnoreCase("editor")) new Query("INSERT INTO editor (user_id) VALUES (?)").with(userID).insert();
-        if (type.equalsIgnoreCase("reviewer")) new Query("INSERT INTO reviewer (user_id, email) VALUES (?, ?)").with(userID, tokens[4]).insert();
-        // Add reviewer RICodes
+        if (type.equalsIgnoreCase("author")) {
+            new Query("INSERT INTO author (user_id, email, affiliation, address) VALUES (?, ?, ?, ?)").with(userID, tokens[4], tokens[5], tokens[6]).insert();
+            return new Author(userID.toString());
+        }
+        if (type.equalsIgnoreCase("editor")) {
+            new Query("INSERT INTO editor (user_id) VALUES (?)").with(userID).insert();
+            return new Editor(userID.toString());
+        }
         if (type.equalsIgnoreCase("reviewer")) {
-            // ...
+            if (tokens.length > 5) {
+                Utility.logError("Reviewers can have a maximum of 3 RI codes");
+                return null;
+            }
+            new Query("INSERT INTO reviewer (user_id, email) VALUES (?, ?)").with(userID, tokens[4]).insert();
+            // Add reviewer RI codes
+            for (int i = 2; i < 5; i++) new Query("INSERT INTO interests (reviewer_id, RICodes_code) VALUES (?, ?)").with(userID, tokens[i]).insert();
+            // Return reviewer
+            return new Reviewer(userID.toString());
         }
         // Return null
+        Utility.logError("Unable to register user of type: '"+type+"'");
         return null;
     }
 

@@ -19,7 +19,7 @@ public class Editor extends User {
     //region --REPL--
 
     @Override
-    public void evaluate (String[] args, Scanner scanner) {
+    public boolean evaluate (String[] args, Scanner scanner) {
         if (args[0].equalsIgnoreCase("status")) status();
         else if (args[0].equalsIgnoreCase("assign")) ;
         else if (args[0].equalsIgnoreCase("accept")) accept(args[1]);
@@ -28,7 +28,9 @@ public class Editor extends User {
         else if (args[0].equalsIgnoreCase("issue")) ;
         else if (args[0].equalsIgnoreCase("schedule")) ;
         else if (args[0].equalsIgnoreCase("publish")) ;
+        else if (args[0].equalsIgnoreCase("logout")) return false;
         else Utility.logError("Unrecognized command received. Try again");
+        return true;
     }
     //endregion
 
@@ -55,22 +57,11 @@ public class Editor extends User {
 
     @Override
     protected void status () {
-        Utility.log("\nStatus: ");
         // Get all manuscripts
-        ResultSet manuscripts = new Query("SELECT * FROM manuscript ORDER BY FIELD(status, 'submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'), id").execute();
-        // Print header
-        try {
-            int columns = manuscripts.getMetaData().getColumnCount();
-            for (int i = 1; i <= columns; i++) System.out.format("%-13s", manuscripts.getMetaData().getColumnName(i));
-            System.out.println("");
-            // Print info
-            while (manuscripts.next()) {
-                for (int i = 1; i <= columns; i++) System.out.format("%-13s", manuscripts.getObject(i) instanceof byte[] ? "BLOB" : manuscripts.getObject(i));
-                System.out.println("");
-            }
-        } catch (SQLException ex) {
-            Utility.logError("Failed to retrieve status: "+ex);
-        }
+        ResultSet result = new Query("SELECT id, author_id, RICodes_code, title, status, timestamp FROM manuscript ORDER BY FIELD(status, 'submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'), id").execute();
+        // Print
+        Utility.log("\nStatus: ");
+        Utility.print(result, true);
     }
 
     private void assign () { // INCOMPLETE
