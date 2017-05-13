@@ -6,10 +6,16 @@ SELECT sum(pageCount) as total FROM acceptance JOIN manuscript ON manuscript_id 
 # ManuScripts
 *INCOMPLETE*
 
+**Authentication**
+
+We included an AES encryption method for passwords, which uses a 128-bit (16 character) secret key which
+is prompted for at the startup of the system.
+
+
 ## Commands
 
 If an attribute being entered is more than one word (such as address) then entered that attribute within quotes.
-Opt. designates an optional input
+() rather than <> designates an optional input.
 
 ### Initially:
 
@@ -24,7 +30,7 @@ $ register editor <fname> <lname>
 
 
 ```
-$ register reviewer <fname> <lname> <email> <affiliation> <RIcode1> <opt. RIcode2> <opt. RIcode3>
+$ register reviewer <fname> <lname> <email> <affiliation> <RIcode1> (RIcode2) (RIcode3)
 ```
 
 ```
@@ -35,7 +41,7 @@ $ login <id>
 ### When logged in as an author:
 
 ```
-$ submit <title> <RICode> <filename> <opt. author2> <opt. author3> <opt. author4> 
+$ submit <title> <RICode> <filename> (author2) (author3) (author4)
 ```
 
 ```
@@ -66,18 +72,18 @@ $ accept <manu#>
 ```
 
 ```
-typeset <manu#> <pp>
+$ typeset <manu#> <pp>
 ```
 
 ```
-schedule <manu#> <issue>
+$ schedule <manu#> <issue>
 ```
 
 ```
-publish <issue>
+$ publish <issue>
 ```
 
-### When logged in as an editor:
+### When logged in as a reviewer:
 
 ```
 $ resign
