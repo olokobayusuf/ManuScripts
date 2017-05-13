@@ -3,10 +3,12 @@
  * Trigger definitions
  */
 
-USE `yusuf_db`;
+USE `kfarmer_db`;
 
 DROP TRIGGER IF EXISTS ricode_trigger;
 DROP TRIGGER IF EXISTS on_resign_trigger;
+DROP TRIGGER IF EXISTS on_schedule;
+
 
 DELIMITER $$
 
@@ -44,6 +46,18 @@ BEGIN
 	DELETE FROM `feedback` where reviewer_id = OLD.user_id;
     DELETE FROM `review` where reviewer_id = OLD.user_id;
 	SET SQL_SAFE_UPDATES = 1;
+END$$
+
+CREATE TRIGGER on_schedule BEFORE INSERT ON acceptance
+FOR EACH ROW
+BEGIN
+    DECLARE message VARCHAR(128); 
+    IF (
+        (SELECT Count(*) from publish WHERE issue_id = new.issue_id) > 0
+    ) THEN
+        SET message = CONCAT('UserException: That issue has been published');
+		SIGNAL SQLSTATE '45000' SET message_text = message;
+    END IF;
 END$$
 
 DELIMITER ;
