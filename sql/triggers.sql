@@ -10,6 +10,9 @@ DROP TRIGGER IF EXISTS on_resign_trigger;
 DROP TRIGGER IF EXISTS on_schedule;
 DROP TRIGGER IF EXISTS before_publish;
 DROP TRIGGER IF EXISTS after_publish;
+DROP TRIGGER IF EXISTS new_issue;
+DROP TRIGGER IF EXISTS before_accept;
+
 
 DELIMITER $$
 
@@ -100,6 +103,18 @@ BEGIN
         (SELECT Count(*) from issue WHERE year = new.year AND period = new.period) > 0
     ) THEN
         SET message = CONCAT('UserException: There is already an issue for that year and period');
+		SIGNAL SQLSTATE '45000' SET message_text = message;
+    END IF;
+END$$
+
+CREATE TRIGGER before_accept BEFORE UPDATE ON manuscript
+FOR EACH ROW
+BEGIN
+    DECLARE message VARCHAR(128); 
+    IF (
+        (NEW.status = "accepted") AND ((SELECT Count(*) FROM feedback WHERE manuscript_id = new.id) < 3)
+    ) THEN
+        SET message = CONCAT('UserException: There must be three completed reviews in order to accept a manuscript');
 		SIGNAL SQLSTATE '45000' SET message_text = message;
     END IF;
 END$$
