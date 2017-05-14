@@ -64,19 +64,26 @@ public class Author extends User {
 
     private void submit (String[] args) { // DEPLOY
         // Arg checking
-        if (args.length > 5) {
+        if (args.length > 7) {
             Utility.logError("Cannot submit manuscript with more than three contributing authors");
             return;
         }
+        if (args.length < 4) {
+            Utility.logError("Not enough arguments given");
+            return;
+        }
+        int manuscript;
+
         // Add manuscript
-        int manuscript = new Query("INSERT INTO manuscript (author_id, RICodes_code, title, status, timestamp) VALUES (?, ?, ?, ?, NOW())").with(id, args[2], args[1], "submitted").insert();
+        manuscript = new Query("INSERT INTO manuscript (author_id, RICodes_code, title, status, timestamp, doc) VALUES (?, ?, ?, ?, NOW(), ?)").with(id, args[2], args[1], "submitted", args[3]).insert();
         // Add contributors
-        for (int i = 3; i < args.length; i++) {
+        for (int i = 4; i < args.length; i++) {
             String[] name = args[i].split("\\s");
             new Query("INSERT INTO contributors (manuscript_id, order, fname, lname)").with(manuscript, i - 2, name[0], name[name.length - 1]);
         }
         // Log
-        Utility.log("Successfully submitted manuscript: "+manuscript);
+        if (manuscript == -1) Utility.log("Failed to submit manuscript");
+        else Utility.log("Successfully submitted manuscript: "+manuscript);
     }
 
     private void retract (String[] args, Scanner scanner) {

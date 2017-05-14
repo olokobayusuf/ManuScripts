@@ -58,7 +58,7 @@ public class Editor extends User {
     @Override
     protected void status () {
         // Get all manuscripts
-        ResultSet result = new Query("SELECT id, author_id, RICodes_code, title, status, timestamp FROM manuscript ORDER BY FIELD(status, 'submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'), id").execute();
+        ResultSet result = new Query("SELECT id, author_id, title, RICodes_code, status, timestamp FROM manuscript ORDER BY FIELD(status, 'submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'), id").execute();
         // Print
         Utility.log("\nStatus: ");
         Utility.print(result, true);

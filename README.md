@@ -53,8 +53,11 @@ $ exit
 ### When logged in as an author:
 
 ```
-$ submit <title> <RICode> <filename> (author2) (author3) (author4)
+$ submit <title> <RICode> (author2) (author3) (author4)
 ```
+
+we are not including the filename since blobs are not being implemented.
+
 
 ```
 $ status
@@ -106,10 +109,14 @@ $ status
 ```
 
 ```
-$ review <accept/reject> <appropriateness> <clarity> <methodology> <contribution>
+$ accept <manu#> <appropriateness> <clarity> <methodology> <contribution>
 ```
 
-where the last four attributes are integers 1-10. A reviewer can only review a manuscript which is under review and they have been assigned to. 
+```
+$ reject <manu#> <appropriateness> <clarity> <methodology> <contribution>
+```
+
+A reviewer can only review a manuscript which is under review and they have been assigned to. 
 
 
 ## Dependencies

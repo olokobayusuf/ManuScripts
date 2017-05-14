@@ -38,6 +38,9 @@ public abstract class User {
     public static User register (String[] tokens) { // DEPLOY
         // Create a user ID
         Integer userID = new Query("INSERT INTO user (fname, lname) VALUES (?, ?)").with(tokens[2], tokens[3]).insert();
+        // Get ID
+        Utility.log("New UserID is "+userID.toString());
+
         // Register the user type
         String type = tokens[1];
         if (type.equalsIgnoreCase("author")) {
