@@ -27,7 +27,7 @@ debug:
 test:
 	@java -cp "$(BUILDDIR):$(LIBDIR)/*" $(TARGET) --test
 
-extracredit:
+auth:
 	@java -cp "$(BUILDDIR):$(LIBDIR)/*" $(TARGET) --auth
 
 %.class: %.java

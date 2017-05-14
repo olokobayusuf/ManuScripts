@@ -1,125 +1,60 @@
-# for schedule:
-SELECT sum(pageCount) as total FROM acceptance JOIN manuscript ON manuscript_id = manuscript.id WHERE issue_id = issueID; 
-
-
-
 # ManuScripts
-*INCOMPLETE*
+ManuScripts is a lightweight application for science journal publications.
 
-**Authentication**
+## Setup
+- Build the project with the makefile: `make`
+- Run it: `make run`
+    - To run in verbose mode, use the debug target: `make debug`
+    - To run with password authentication, use the auth target: `make auth`
 
-We included an AES encryption method for passwords, which uses a 128-bit (16 character) secret key which
-is prompted for at the startup of the system.
+## Usage
+The app starts by requesting user authentication. To do so, either register or login:
 
-
-## Commands
-
-If an attribute being entered is more than one word (such as address) then entered that attribute within quotes.
-() rather than <> designates an optional input.
-
-### Initially:
-
+## Author Registration
+To register as an author, simply supply the author's first name, last name, email address, affiliation, and address. For example:
 ```
-$ register author <fname> <lname> <email> <address> <affiliation>
+$ => register author Yusuf Olokoba olokobayusuf@gmail.com "Dartmouth College" "Hinman box 2982, Hanover, NH"
 ```
+You will then be shown a welcome message and given the ability to use the author UI. Note that when in authentication mode, you will be prompted for a password for your account.
 
-
+## Editor Registration
+To register as an editor, simply supply your first and last names:
 ```
-$ register editor <fname> <lname>
+$ => register editor Kevin Farmer
 ```
+You will then be shown a welcome message and given the ability to use the editor UI. Note that when in authentication mode, you will be prompted for a password for your account.
 
-
+## Reviewer Registration
+To register as a reviewer, simply supply your first name, last name, at between one and three RI codes:
 ```
-$ register reviewer <fname> <lname> <email> <affiliation> <RIcode1> (RIcode2) (RIcode3)
+$ => register reviewer Chris Palmer 1 2 3
 ```
+You will then be shown a welcome message and given the ability to use the reviewer UI. Note that when in authentication mode, you will be prompted for a password for your account. Also note that you must provide the appropriate number of RI codes.
 
+## Logging In
+To login, use the `login` command with your user ID:
 ```
-$ login <id>
+$ => login 15
 ```
+You will then be shown a welcome message and given the ability to use the UI that corresponds to your user type. Note that when in authentication mode, you will be prompted for a password.
 
-After logging in, you can logout of the current user with
-
+## Logging Out and Exiting
+To logout, use the `logout` command:
 ```
-$ logout
+$ => logout
 ```
-
-If not logged in, you can exit the system with
-
+To exit the app, you must first log out. Once logged out, you can use either the `exit` or `quit` commands to exit:
 ```
-$ exit
-```
-
-
-### When logged in as an author:
-
-```
-$ submit <title> <RICode> <filename> (author2) (author3) (author4)
+$ => exit
+$ => quit
 ```
 
-```
-$ status
-```
-
-```
-$ retract <manu#>
-```
-
-
-### When logged in as an editor:
-
-```
-$ status
-```
-
-```
-$ assign <manu#> <reviewer id>
-```
-
-```
-$ reject <manu#>
-```
-
-```
-$ accept <manu#>
-```
-
-```
-$ typeset <manu#> <pp>
-```
-
-```
-$ schedule <manu#> <issue>
-```
-
-```
-$ publish <issue>
-```
-
-### When logged in as a reviewer:
-
-```
-$ resign
-```
-
-```
-$ status
-```
-
-```
-$ review <accept/reject> <appropriateness> <clarity> <methodology> <contribution>
-```
-
-where the last four attributes are integers 1-10. A reviewer can only review a manuscript which is under review and they have been assigned to. 
-
+## Performing Tasks
+See the [ManuScripts Specification](http://www.cs.dartmouth.edu/~cs61/Labs/Lab%202/Lab%202.html).
 
 ## Dependencies
-*INCOMPLETE*
-
-## How to Build
-*INCOMPLETE*
-
-## Architecture
-*INCOMPLETE*
+- Java/JDK 8
+- Makefile (for using `make`)
 
 ## Credits
 - [Kevin Farmer](mailto:kevin.r.farmer.18@dartmouth.edu)
