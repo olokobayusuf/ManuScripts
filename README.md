@@ -56,6 +56,20 @@ $ => exit
 $ => quit
 ```
 
+### When logged in as an author:
+
+```
+$ submit <title> <RICode> <filename> (author2) (author3) (author4)
+```
+
+```
+$ status
+```
+
+```
+$ retract <manu#>
+```
+
 
 ### When logged in as an editor:
 
@@ -103,7 +117,7 @@ $ accept <manu#> <appropriateness> <clarity> <methodology> <contribution>
 
 ```
 $ reject <manu#> <appropriateness> <clarity> <methodology> <contribution>
-``` 
+```
 
 
 ## Performing Tasks
