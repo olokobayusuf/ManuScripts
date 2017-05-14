@@ -79,7 +79,7 @@ public class Author extends User {
         // Add contributors
         for (int i = 4; i < args.length; i++) {
             String[] name = args[i].split("\\s");
-            new Query("INSERT INTO contributors (manuscript_id, order, fname, lname)").with(manuscript, i - 2, name[0], name[name.length - 1]);
+            new Query("INSERT INTO contributors (manuscript_id, `order`, fname, lname) VALUES (?, ?, ?, ?)").with(manuscript, i - 3, name[0], name[name.length - 1]).insert();
         }
         // Log
         if (manuscript == -1) Utility.log("Failed to submit manuscript");

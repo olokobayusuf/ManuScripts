@@ -82,7 +82,7 @@ public class Editor extends User {
             // Create a new review
             new Query("INSERT INTO review (manuscript_id, reviewer_id, dateSent) VALUES (?, ?, NOW())").with(manuscript, reviewer).insert();
             // Update the manuscript status
-            new Query("UPDATE manuscript SET status = 'underreview', timestamp = NOW() WHERE id = ?").with(manuscript).update();
+            new Query("UPDATE manuscript SET status = 'underreview', timestamp = NOW(), editor_id = ? WHERE id = ?").with(id, manuscript).update();
         } catch (SQLException ex) {
             Utility.logError("Failed to assign manuscript: "+ex);
         }
