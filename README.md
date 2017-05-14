@@ -2,6 +2,7 @@
 ManuScripts is a lightweight application for science journal publications.
 
 ## Setup
+- To setup the database, run tables.sql, insert.sql, triggers.sql and views.sql
 - Build the project with the makefile: `make`
 - Run it: `make run`
     - To run in verbose mode, use the debug target: `make debug`
