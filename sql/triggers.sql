@@ -3,7 +3,7 @@
  * Trigger definitions
  */
 
-USE `yusuf_db`;
+USE `kfarmer_db`;
 
 DROP TRIGGER IF EXISTS ricode_trigger;
 DROP TRIGGER IF EXISTS on_resign_trigger;
@@ -133,7 +133,13 @@ BEGIN
 		SIGNAL SQLSTATE '45000' SET message_text = message;
     END IF;
     
-    
+	IF (
+        (NEW.status = "rejected") AND ((SELECT status FROM manuscript WHERE id = new.id) = "published")
+    ) THEN
+        SET message = CONCAT('UserException: Cannot reject a manuscript that has been published');
+		SIGNAL SQLSTATE '45000' SET message_text = message;
+    END IF;
 END$$
+
 
 DELIMITER ;

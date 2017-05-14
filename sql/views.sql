@@ -3,7 +3,7 @@
  * Creates views necessary for our application
  */
 
-USE `yusuf_db`;
+USE `kfarmer_db`;
 
 DROP VIEW IF EXISTS LeadAuthorManuscripts;
 CREATE VIEW LeadAuthorManuscripts AS

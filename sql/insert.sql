@@ -3,7 +3,7 @@
  * Inserts generated test data 
  */
 
-USE `yusuf_db`;
+USE `kfarmer_db`;
 
 INSERT INTO `user` (`fname`,`lname`) VALUES 
 ("Vielka","Cruz"),
