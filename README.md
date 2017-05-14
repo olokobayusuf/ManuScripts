@@ -25,36 +25,94 @@ $ => register editor Kevin Farmer
 You will then be shown a welcome message and given the ability to use the editor UI. Note that when in authentication mode, you will be prompted for a password for your account.
 
 ## Reviewer Registration
-To register as a reviewer, simply supply your first name, last name, at between one and three RI codes:
+To register as a reviewer, simply supply your first name, last name, email, affiliation and between one and three RI codes:
 ```
-$ => register reviewer Chris Palmer 1 2 3
+$ => register reviewer Chris Palmer chris@gmail.com "Dartmouth College" 1 2 3
 ```
 You will then be shown a welcome message and given the ability to use the reviewer UI. Note that when in authentication mode, you will be prompted for a password for your account. Also note that you must provide the appropriate number of RI codes.
 
 ## Logging In
 To login, use the `login` command with your user ID:
+
 ```
 $ => login 15
 ```
 You will then be shown a welcome message and given the ability to use the UI that corresponds to your user type. Note that when in authentication mode, you will be prompted for a password.
 
+
 ## Logging Out and Exiting
+
 To logout, use the `logout` command:
+
 ```
 $ => logout
 ```
+
 To exit the app, you must first log out. Once logged out, you can use either the `exit` or `quit` commands to exit:
+
 ```
 $ => exit
 $ => quit
 ```
 
+
+### When logged in as an editor:
+
+```
+$ status
+```
+
+```
+$ assign <manu#> <reviewer id>
+```
+
+```
+$ reject <manu#>
+```
+
+```
+$ accept <manu#>
+```
+
+```
+$ typeset <manu#> <pp>
+```
+
+```
+$ schedule <manu#> <issue>
+```
+
+```
+$ publish <issue>
+```
+
+### When logged in as a reviewer:
+
+```
+$ resign
+```
+
+```
+$ status
+```
+
+```
+$ accept <manu#> <appropriateness> <clarity> <methodology> <contribution>
+```
+
+```
+$ reject <manu#> <appropriateness> <clarity> <methodology> <contribution>
+``` 
+
+
 ## Performing Tasks
 See the [ManuScripts Specification](http://www.cs.dartmouth.edu/~cs61/Labs/Lab%202/Lab%202.html).
+
 
 ## Dependencies
 - Java/JDK 8
 - Makefile (for using `make`)
+- [MySQL JDBC Connector](https://dev.mysql.com/downloads/connector/j/5.1.html). Place this in the `lib` directory
 
 ## Credits
 - [Kevin Farmer](mailto:kevin.r.farmer.18@dartmouth.edu)

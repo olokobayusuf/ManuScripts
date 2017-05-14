@@ -21,13 +21,13 @@ public class Editor extends User {
     @Override
     public boolean evaluate (String[] args, Scanner scanner) {
         if (args[0].equalsIgnoreCase("status")) status();
-        else if (args[0].equalsIgnoreCase("assign")) assign(args[1], args[2]);
-        else if (args[0].equalsIgnoreCase("accept")) accept(args[1]);
-        else if (args[0].equalsIgnoreCase("reject")) reject(args[1]);
-        else if (args[0].equalsIgnoreCase("typeset")) typeset(args[1], args[2]);
-        else if (args[0].equalsIgnoreCase("issue")) issue(args[1], args[2]);
-        else if (args[0].equalsIgnoreCase("schedule")) schedule(args[1], args[2]);
-        else if (args[0].equalsIgnoreCase("publish")) publish(args[1]);
+        else if (args[0].equalsIgnoreCase("assign")) { if (args.length < 3) Utility.logError("Not enough args"); else assign(args[1], args[2]); }
+        else if (args[0].equalsIgnoreCase("accept")) { if (args.length < 2) Utility.logError("Not enough args"); else accept(args[1]); }
+        else if (args[0].equalsIgnoreCase("reject")) { if (args.length < 2) Utility.logError("Not enough args"); else reject(args[1]); }
+        else if (args[0].equalsIgnoreCase("typeset")) { if (args.length < 3) Utility.logError("Not enough args"); else typeset(args[1], args[2]); }
+        else if (args[0].equalsIgnoreCase("issue")) { if (args.length < 3) Utility.logError("Not enough args"); else issue(args[1], args[2]); }
+        else if (args[0].equalsIgnoreCase("schedule")) { if (args.length < 3) Utility.logError("Not enough args"); else schedule(args[1], args[2]); }
+        else if (args[0].equalsIgnoreCase("publish")) { if (args.length < 2) Utility.logError("Not enough args"); else publish(args[1]); }
         else if (args[0].equalsIgnoreCase("logout")) return false;
         else Utility.logError("Unrecognized command received. Try again");
         return true;
@@ -58,7 +58,7 @@ public class Editor extends User {
     @Override
     protected void status () {
         // Get all manuscripts
-        ResultSet result = new Query("SELECT id, author_id, RICodes_code, title, status, timestamp FROM manuscript ORDER BY FIELD(status, 'submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'), id").execute();
+        ResultSet result = new Query("SELECT id, author_id, title, RICodes_code, status, timestamp FROM manuscript ORDER BY FIELD(status, 'submitted', 'underreview', 'rejected', 'accepted', 'typeset', 'scheduled', 'published'), id").execute();
         // Print
         Utility.log("\nStatus: ");
         Utility.print(result, true);
@@ -82,7 +82,7 @@ public class Editor extends User {
             // Create a new review
             new Query("INSERT INTO review (manuscript_id, reviewer_id, dateSent) VALUES (?, ?, NOW())").with(manuscript, reviewer).insert();
             // Update the manuscript status
-            new Query("UPDATE manuscript SET status = 'underreview', timestamp = NOW() WHERE id = ?").with(manuscript).update();
+            new Query("UPDATE manuscript SET status = 'underreview', timestamp = NOW(), editor_id = ? WHERE id = ?").with(id, manuscript).update();
         } catch (SQLException ex) {
             Utility.logError("Failed to assign manuscript: "+ex);
         }

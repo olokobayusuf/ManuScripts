@@ -36,13 +36,24 @@ public abstract class User {
     //region --Operations--
 
     public static User register (String[] tokens, boolean authenticate) {
+        if (tokens.length < 4) {
+            Utility.logError("Fewer than expected arguments");
+            return null;
+        }
         // Create a user ID
         Integer userID = new Query("INSERT INTO user (fname, lname) VALUES (?, ?)").with(tokens[2], tokens[3]).insert();
+
         // Get credentials
         if (authenticate) new Query("INSERT INTO credential (user_id, password) VALUES (?, ?)").with(userID, Auth.encrypt(new String(Auth.getPassword(true)))).insert();
+
         // Register the user type
         String type = tokens[1];
         if (type.equalsIgnoreCase("author")) {
+            if (tokens.length < 7) {
+                new Query("DELETE FROM user WHERE id = ?").with(userID).update();
+                Utility.logError("Fewer than expected arguments");
+                return null;
+            }
             new Query("INSERT INTO author (user_id, email, affiliation, address) VALUES (?, ?, ?, ?)").with(userID, tokens[4], tokens[5], tokens[6]).insert();
             Utility.log("Registered author "+tokens[2]+" "+tokens[3]+" with ID: "+userID);
             return new Author(userID.toString());
@@ -53,13 +64,18 @@ public abstract class User {
             return new Editor(userID.toString());
         }
         if (type.equalsIgnoreCase("reviewer")) {
-            if (tokens.length > 5) {
+            if (tokens.length < 7) {
+                new Query("DELETE FROM user WHERE id = ?").with(userID).update();
+                Utility.logError("Fewer than expected arguments");
+                return null;
+            }
+            if (tokens.length > 8) {
                 Utility.logError("Reviewers can have a maximum of 3 RI codes");
                 return null;
             }
-            new Query("INSERT INTO reviewer (user_id, email) VALUES (?, ?)").with(userID, tokens[4]).insert();
+            new Query("INSERT INTO reviewer (user_id, email, affiliation) VALUES (?, ?, ?)").with(userID, tokens[4], tokens[5]).insert();
             // Add reviewer RI codes
-            for (int i = 2; i < 5; i++) new Query("INSERT INTO interests (reviewer_id, RICodes_code) VALUES (?, ?)").with(userID, tokens[i]).insert();
+            for (int i = 6; i < tokens.length; i++) new Query("INSERT INTO interests (reviewer_id, RICodes_code) VALUES (?, ?)").with(userID, tokens[i]).insert();
             // Return reviewer
             Utility.log("Registered reviewer "+tokens[2]+" "+tokens[3]+" with ID: "+userID);
             return new Reviewer(userID.toString());
