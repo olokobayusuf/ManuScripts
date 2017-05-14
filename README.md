@@ -55,6 +55,7 @@ See the [ManuScripts Specification](http://www.cs.dartmouth.edu/~cs61/Labs/Lab%2
 ## Dependencies
 - Java/JDK 8
 - Makefile (for using `make`)
+- [MySQL JDBC Connector](https://dev.mysql.com/downloads/connector/j/5.1.html). Place this in the `lib` directory
 
 ## Credits
 - [Kevin Farmer](mailto:kevin.r.farmer.18@dartmouth.edu)
