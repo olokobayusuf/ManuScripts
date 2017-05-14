@@ -25,9 +25,9 @@ $ => register editor Kevin Farmer
 You will then be shown a welcome message and given the ability to use the editor UI. Note that when in authentication mode, you will be prompted for a password for your account.
 
 ## Reviewer Registration
-To register as a reviewer, simply supply your first name, last name, at between one and three RI codes:
+To register as a reviewer, simply supply your first name, last name, email, affiliation and between one and three RI codes:
 ```
-$ => register reviewer Chris Palmer 1 2 3
+$ => register reviewer Chris Palmer chris@gmail.com "Dartmouth College" 1 2 3
 ```
 You will then be shown a welcome message and given the ability to use the reviewer UI. Note that when in authentication mode, you will be prompted for a password for your account. Also note that you must provide the appropriate number of RI codes.
 

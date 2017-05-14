@@ -87,6 +87,10 @@ public class Author extends User {
     }
 
     private void retract (String[] args, Scanner scanner) {
+        if (args.length != 2) {
+            Utility.logError("Incorrect number of args");
+            return;
+        }
         // Check that it is ours
         String manuscript = args[1];
         try {
