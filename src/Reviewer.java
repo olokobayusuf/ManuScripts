@@ -66,7 +66,7 @@ public class Reviewer extends User {
         Utility.print(result, true);
     }
 
-    private void review (boolean accept, String[] args) { // DEPLOY
+    private void review (boolean accept, String[] args) {
         // Arg checking
         if (args.length != 6) {
             Utility.logError("Incorrect arguments for manuscript review");

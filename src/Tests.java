@@ -6,7 +6,7 @@
 import java.sql.*;
 import java.util.Collections;
 
-public class Tests {
+public final class Tests {
 
     public static void test (String[] args) {
         // Enable verbose mode

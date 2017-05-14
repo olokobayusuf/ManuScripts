@@ -3,7 +3,7 @@
  * Trigger definitions
  */
 
-USE `kfarmer_db`;
+USE `yusuf_db`;
 
 DROP TRIGGER IF EXISTS ricode_trigger;
 DROP TRIGGER IF EXISTS on_resign_trigger;
