@@ -3,7 +3,7 @@
  * Trigger definitions
  */
 
-USE `kfarmer_db`;
+USE `yusuf_db`;
 
 DROP TRIGGER IF EXISTS ricode_trigger;
 DROP TRIGGER IF EXISTS on_resign_trigger;
@@ -11,7 +11,7 @@ DROP TRIGGER IF EXISTS on_schedule;
 DROP TRIGGER IF EXISTS before_publish;
 DROP TRIGGER IF EXISTS after_publish;
 DROP TRIGGER IF EXISTS new_issue;
-DROP TRIGGER IF EXISTS before_accept;
+DROP TRIGGER IF EXISTS before_status_update;
 
 
 DELIMITER $$
@@ -69,6 +69,14 @@ BEGIN
 		SET message = CONCAT('UserException: An issue cannot have more than 100 pages');
 		SIGNAL SQLSTATE '45000' SET message_text = message;
     END IF;
+    
+	IF (
+        (SELECT status FROM manuscript WHERE id = new.manuscript_id) != "typeset"
+    ) THEN
+        SET message = CONCAT('UserException: Manuscript must be in typeset state to be scheduled');
+		SIGNAL SQLSTATE '45000' SET message_text = message;
+    END IF;
+    
     UPDATE manuscript
     SET status = 'scheduled', timestamp = NOW()
     WHERE id = new.manuscript_id;
@@ -107,7 +115,7 @@ BEGIN
     END IF;
 END$$
 
-CREATE TRIGGER before_accept BEFORE UPDATE ON manuscript
+CREATE TRIGGER before_status_update BEFORE UPDATE ON manuscript
 FOR EACH ROW
 BEGIN
     DECLARE message VARCHAR(128); 
@@ -117,6 +125,15 @@ BEGIN
         SET message = CONCAT('UserException: There must be three completed reviews in order to accept a manuscript');
 		SIGNAL SQLSTATE '45000' SET message_text = message;
     END IF;
+
+	IF (
+        (NEW.status = "typeset") AND ((SELECT status FROM manuscript WHERE id = new.id) != "accepted")
+    ) THEN
+        SET message = CONCAT('UserException: Manuscript must be in accepted state to be typeset');
+		SIGNAL SQLSTATE '45000' SET message_text = message;
+    END IF;
+    
+    
 END$$
 
 DELIMITER ;

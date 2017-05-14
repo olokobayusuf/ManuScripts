@@ -100,19 +100,19 @@ public class Editor extends User {
         new Query("UPDATE manuscript SET status = 'typeset', timestamp = NOW(), pageCount = ? WHERE id = ?").with(pages, id).update();
     }
 
-    private void issue (String year, String period) { // INCOMPLETE
+    private void issue (String year, String period) {
         new Query("INSERT INTO issue (year, period) VALUES (?, ?)").with(year, period).insert();
     }
 
-    private void schedule (String manuscript, String issue) { // INCOMPLETE
-        new Query("INSERT INTO acceptance (manuscript_id, issue_id) VALUES (?, ?)").with(manuscript, issue).insert();
+    private void schedule (String manuscript, String issue) {
         // Trigger checks if issue has already been published or total pages would be over 100
+        new Query("INSERT INTO acceptance (manuscript_id, issue_id) VALUES (?, ?)").with(manuscript, issue).insert();
     }
 
-    private void publish (String issue) { // INCOMPLETE
-         new Query("INSERT INTO publish (issue_id, publishDate) VALUES (?, NOW())").with(issue).insert();
-         // triggers check if issue contains at least 1 manuscript before insert, 
-         // then update any related manuscripts with status after insert
+    private void publish (String issue) {
+        // Trigger checks if issue contains at least 1 manuscript before insert, 
+        // then updates any related manuscripts with status after insert
+        new Query("INSERT INTO publish (issue_id, publishDate) VALUES (?, NOW())").with(issue).insert();
     }
     //endregion
 }

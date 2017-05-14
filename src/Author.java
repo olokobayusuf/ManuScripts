@@ -62,7 +62,7 @@ public class Author extends User {
         Utility.print(result, true);
     }
 
-    private void submit (String[] args) { // DEPLOY
+    private void submit (String[] args) {
         // Arg checking
         if (args.length > 7) {
             Utility.logError("Cannot submit manuscript with more than three contributing authors");
